@@ -1,0 +1,42 @@
+.admin-dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.menu-bar {
+    background-color: #333;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dashboard-title {
+    color: white;
+    margin: 0;
+    padding: 14px 20px;
+    /* font-size: 24px; */
+}
+
+.menu-bar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.menu-bar ul li {
+    padding: 14px 20px;
+    cursor: pointer;
+    color: white;
+}
+
+.menu-bar ul li:hover {
+    background-color: #575757;
+}
+
+.content {
+    margin-top: 20px;
+}
