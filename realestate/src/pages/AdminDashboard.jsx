@@ -4,48 +4,41 @@ import '../style/admindashboardstyles.css';
 
 const AdminDashboard = () => {
   const [view, setView] = useState('');
+  const [users, setUsers] = useState([]);
+  const [properties, setProperties] = useState([]);
 
   const handleViewChange = (viewName) => {
     setView(viewName);
+
+    if (viewName === 'agents' || viewName === 'clients') {
+      const role = viewName === 'agents' ? 'AGENT' : 'CLIENT';
+      fetchUsersByRole(role);
+    } else if (viewName === 'properties') {
+      fetchProperties();
+    }
   };
 
-  const [agents, setAgents] = useState([]);
+  const fetchUsersByRole = async (role) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/users/${role}`);
+      console.log(`Fetched ${role}:`, response.data); // Debugging
+      setUsers(response.data); // Ensure it's an array
+    } catch (error) {
+      console.error(`There was an error fetching the ${role.toLowerCase()}s!`, error);
+      setUsers([]); // Reset users on error
+    }
+  };
 
-  useEffect(() => {
-    axios.get('/api/agents')
-      .then(response => {
-        setAgents(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the agents!', error);
-      });
-  }, []);
-
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    axios.get('/api/users')
-      .then(response => {
-        setUsers(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the users!', error);
-      });
-  }, []);
-
-  const [properties, setProperties] = useState([]);
-
-  useEffect(() => {
-    axios.get('/api/properties')
-      .then(response => {
-        setProperties(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the users!', error);
-      });
-  }, []);
-
-
+  const fetchProperties = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/properties/getAll');
+      console.log('Fetched Properties:', response.data); // Debugging
+      setProperties(response.data); // Ensure it's an array
+    } catch (error) {
+      console.error('There was an error fetching the properties!', error);
+      setProperties([]); // Reset properties on error
+    }
+  };
 
   return (
     <div className="admin-dashboard">
@@ -58,33 +51,57 @@ const AdminDashboard = () => {
         </ul>
       </nav>
       <div className="content">
-        {view === 'agents' && <div>
-          <h2>List of Agents</h2>
-          <ul>
-            {/* {agents.map(agent => (
-            <li key={agent.id}>{agent.name}</li>
-          ))} */}
-          </ul>
-        </div>}
-        {view === 'clients' && <div>
-          <h2>List of Clients</h2>
-          <ul>
-            {/* {clients.map(client => (
-            <li key={client.id}>{client.name}</li>
-          ))} */}
-          </ul>
-        </div>}
-        {view === 'properties' && <div>
-          <h2>List of Properties</h2>
-          <ul>
-            {/* {properties.map(property => (
-            <li key={property.id}>{property.name}</li>
-          ))} */}
-          </ul>
-        </div>}
+        {view === 'agents' && (
+          <div>
+            <h2>List of Agents</h2>
+            {Array.isArray(users) && users.length > 0 ? (
+              <ul>
+                {users.map(user => (
+                  <li key={user.userid}>
+                    {user.userid} | {user.username} | {user.email} | {user.phone}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No agents found</p>
+            )}
+          </div>
+        )}
+
+        {view === 'clients' && (
+          <div>
+            <h2>List of Clients</h2>
+            {Array.isArray(users) && users.length > 0 ? (
+              <ul>
+                {users.map(user => (
+                  <li key={user.userid}>
+                    {user.userid} | {user.username} | {user.email} | {user.phone}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No clients found</p>
+            )}
+          </div>
+        )}
+
+        {view === 'properties' && (
+          <div>
+            <h2>List of Properties</h2>
+            {Array.isArray(properties) && properties.length > 0 ? (
+              <ul>
+                {properties.map(property => (
+                  <li key={property.propertyId}>{property.propertyName}</li>
+                ))}
+              </ul>
+            ) : (
+              <p>No properties found</p>
+            )}
+          </div>
+        )}
+
         {!view && <h2>Select an option from the menu</h2>}
       </div>
-
     </div>
   );
 };

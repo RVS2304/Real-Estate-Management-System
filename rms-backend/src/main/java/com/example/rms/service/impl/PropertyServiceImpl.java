@@ -92,6 +92,14 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
+    public List<PropertyDto> getAllProperties() {
+
+        List<Property> properties = propertyRepository.findAll();
+
+        return properties.stream().map(PropertyMapper::maptoPropertyDto).collect(Collectors.toList());
+    }
+
+    @Override
     public void deleteProperty(Long propertyId) {
         Property property = propertyRepository.findById(propertyId).orElseThrow(
                 () -> new RuntimeException("Property not found")

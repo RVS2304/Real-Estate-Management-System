@@ -2,6 +2,7 @@ package com.example.rms.service.impl;
 
 import com.example.rms.dto.LoginDto;
 import com.example.rms.dto.UserDto;
+import com.example.rms.entity.ROLE;
 import com.example.rms.entity.User;
 import com.example.rms.mapper.UserMapper;
 import com.example.rms.repository.UserRepository;
@@ -10,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -42,5 +45,11 @@ public class UserServiceImpl implements UserService {
         }
 
         return false;
+    }
+
+    @Override
+    public List<UserDto> getUserByRole(ROLE role) {
+        List<User> users = userRepository.findByRole(role);
+        return users.stream().map(UserMapper::maptoUserDto).collect(Collectors.toList());
     }
 }

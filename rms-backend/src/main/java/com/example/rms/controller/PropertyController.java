@@ -72,4 +72,11 @@ public class PropertyController {
         propertyService.deleteProperty(propertyId);
         return ResponseEntity.ok(null);
     }
+
+//    get all properties
+    @GetMapping("/getAll")
+    public ResponseEntity<List<PropertyDto>> getAllProperties() {
+        List<PropertyDto> properties = propertyService.getAllProperties();
+        return ResponseEntity.ok(properties);
+    }
 }

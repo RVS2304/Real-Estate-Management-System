@@ -13,6 +13,6 @@ public interface PropertyService {
     List<PropertyDto> getPropertiesByAgent(String username);
     PropertyDto updateProperty(Long propertyId, PropertyDto propertyDto, MultipartFile propertyImage) throws IOException;
     PropertyDto getProperty(Long propertyId);
-//    List<PropertyDto> getAllProperties();
+    List<PropertyDto> getAllProperties();
     void deleteProperty(Long propertyId);
 }
