@@ -1,10 +1,10 @@
-// eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, InputNumber, Select, message, Upload, DatePicker } from 'antd';
+import { Button, Form, Input, InputNumber, Select, message, Upload, DatePicker, Spin } from 'antd';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { UploadOutlined } from '@ant-design/icons';
 import '../style/addproperty.scss';
+import moment from 'moment';  // Import moment for date handling
 
 const { TextArea } = Input;
 
@@ -26,12 +26,28 @@ const EditPropertyForm = () => {
   const navigate = useNavigate();
   const { propertyId } = useParams();
   const [loading, setLoading] = useState(true);
-  console.log(propertyId);
+  const [initialData, setInitialData] = useState(null);
+  const [fileList, setFileList] = useState([]); // Manage fileList state
 
   useEffect(() => {
     axios.get(`http://localhost:8080/api/properties/${propertyId}`)
       .then(response => {
-        form.setFieldsValue(response.data);
+        const data = response.data;
+        data.closingDate = moment(data.closingDate); // Convert date to moment object
+        form.setFieldsValue(data);
+        setInitialData(data);
+
+        if (data.propertyImage) {
+          setFileList([
+            {
+              uid: '-1',
+              name: data.propertyImage,
+              status: 'done',
+              url: `http://localhost:8080/images/${data.propertyImage}`, // Assuming image URL is like this
+            },
+          ]);
+        }
+
         setLoading(false);
       })
       .catch(error => {
@@ -48,12 +64,12 @@ const EditPropertyForm = () => {
     formData.append('address', values.address);
     formData.append('price', values.price);
     formData.append('occupancy_status', values.occupancyStatus);
-    formData.append('closing_date', values.closingDate);
+    formData.append('closing_date', values.closingDate.format('YYYY-MM-DD')); // Ensure correct format
     formData.append('deposit_payment_terms', values.depositPaymentTerms);
     formData.append('description', values.description);
 
-    if (values.propertyImage) {
-      formData.append('property_image', values.propertyImage.file.originFileObj);
+    if (fileList.length > 0 && fileList[0].originFileObj) {
+      formData.append('property_image', fileList[0].originFileObj);
     }
 
     try {
@@ -83,10 +99,15 @@ const EditPropertyForm = () => {
 
   const onReset = () => {
     form.resetFields();
+    setFileList([]); // Reset fileList when form is reset
+  };
+
+  const handleUploadChange = ({ fileList }) => {
+    setFileList([...fileList]);  // Ensure fileList is always an array
   };
 
   if (loading) {
-    return <div>Loading...</div>; // You might want to use a spinner or a more sophisticated loading indicator.
+    return <Spin size="large" tip="Loading..."/>; // Ant Design spinner
   }
 
   return (
@@ -98,9 +119,12 @@ const EditPropertyForm = () => {
         onFinish={handleFinish}
         validateMessages={validateMessages}
         className='form-wid'
+        initialValues={initialData}
       >
         <h2 className='title'>Edit Property</h2>
 
+        {/* Form Items */}
+        {/* Property Name */}
         <Form.Item
           name="propertyName"
           label="Property Name"
@@ -114,6 +138,7 @@ const EditPropertyForm = () => {
           </Select>
         </Form.Item>
 
+        {/* Property Type */}
         <Form.Item
           name="propertyType"
           label="Property Type"
@@ -125,6 +150,7 @@ const EditPropertyForm = () => {
           </Select>
         </Form.Item>
 
+        {/* Address */}
         <Form.Item
           name="address"
           label="Address"
@@ -133,6 +159,7 @@ const EditPropertyForm = () => {
           <TextArea rows={4} placeholder="Enter address" />
         </Form.Item>
 
+        {/* Price */}
         <Form.Item
           name="price"
           label="Price"
@@ -141,6 +168,7 @@ const EditPropertyForm = () => {
           <InputNumber min={0} placeholder="Enter price" />
         </Form.Item>
 
+        {/* Occupancy Status */}
         <Form.Item
           name="occupancyStatus"
           label="Occupancy Status"
@@ -152,6 +180,7 @@ const EditPropertyForm = () => {
           </Select>
         </Form.Item>
 
+        {/* Closing Date */}
         <Form.Item
           name="closingDate"
           label="Closing Date"
@@ -160,6 +189,7 @@ const EditPropertyForm = () => {
           <DatePicker />
         </Form.Item>
 
+        {/* Deposit/Payment */}
         <Form.Item
           name="depositPaymentTerms"
           label="Deposit/Payment"
@@ -168,6 +198,7 @@ const EditPropertyForm = () => {
           <TextArea rows={4} placeholder="Enter deposit/payment terms" />
         </Form.Item>
 
+        {/* Description */}
         <Form.Item
           name="description"
           label="Description"
@@ -176,19 +207,28 @@ const EditPropertyForm = () => {
           <TextArea rows={15} placeholder="Enter description" />
         </Form.Item>
 
+        {/* Property Image */}
         <Form.Item
           name="propertyImage"
           label="Property Image"
-          rules={[{ required: true, message: 'Please select atleast one image!' }]}
           valuePropName="fileList"
           getValueFromEvent={(e) => {
             return Array.isArray(e) ? e : e?.fileList;
           }}
+          rules={[{ required: true, message: 'Please select an image!' }]}
         >
-          <Upload name="propertyImage" listType="picture" beforeUpload={() => false}>
+          <Upload 
+            name="propertyImage" 
+            listType="picture" 
+            beforeUpload={() => false}
+            fileList={fileList}
+            onChange={handleUploadChange}
+          >
             <Button icon={<UploadOutlined />}>Click to Upload</Button>
           </Upload>
         </Form.Item>
+
+        {/* Buttons */}
         <Form.Item
           wrapperCol={{
             ...layout.wrapperCol,
@@ -200,6 +240,9 @@ const EditPropertyForm = () => {
           </Button>
           <Button type="default" htmlType="button" onClick={handleDelete} className='blue-button'>
             Delete
+          </Button>
+          <Button type="default" htmlType="button" onClick={onReset} className='blue-button'>
+            Reset
           </Button>
         </Form.Item>
       </Form>

@@ -35,6 +35,7 @@ const AddPropertyForm = () => {
       propertyName: values.propertyName,
       propertyType: values.propertyType,
       address: values.address,
+      size: values.size,
       price: values.price,
       occupancyStatus: values.occupancyStatus,
       closingDate: values.closingDate.format('YYYY-MM-DD'), // Convert to date string
@@ -115,6 +116,14 @@ const AddPropertyForm = () => {
           rules={[{ required: true, message: 'Please input the address!' }]}
         >
           <TextArea rows={4} placeholder="Enter address" />
+        </Form.Item>
+
+        <Form.Item
+          name="size"
+          label="size (in sq.ft)"
+          rules={[{ required: true, message: 'Please input the size!' }]}
+        >
+          <InputNumber min={0} placeholder="Enter size" />
         </Form.Item>
 
         <Form.Item

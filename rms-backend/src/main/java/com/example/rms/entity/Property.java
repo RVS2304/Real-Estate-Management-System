@@ -30,6 +30,9 @@ public class Property {
     private String address;
 
     @Column(nullable = false)
+    private double size;
+
+    @Column(nullable = false)
     private double price;
 
     @Column(nullable = false, length = 30)

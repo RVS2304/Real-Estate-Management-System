@@ -1,25 +1,24 @@
-// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
 import { Button, Table, Space, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 
 const Dashboard = () => {
   const [properties, setProperties] = useState([]);
+  const [deleted, setDeleted] = useState(false); // State to track deletion
   const navigate = useNavigate();
-
   const username = localStorage.getItem('username'); // Retrieving username from localStorage
 
   const headerStyle = {
-    backgroundColor: '#f0f2f5', // Light grey background
-    padding: '20px',            // Padding around the text
-    textAlign: 'center',        // Center align the text
-    color: '#001529',           // Dark blue text color (Ant Design primary color)
-    borderRadius: '8px',        // Rounded corners
-    marginBottom: '20px',       // Space below the header
-    fontSize: '24px',           // Larger font size
-    fontWeight: 'bold',         // Bold text
+    backgroundColor: '#f0f2f5',
+    padding: '20px',
+    textAlign: 'center',
+    color: '#001529',
+    borderRadius: '8px',
+    marginBottom: '20px',
+    fontSize: '24px',
+    fontWeight: 'bold',
   };
 
   useEffect(() => {
@@ -27,14 +26,9 @@ const Dashboard = () => {
     axios.get(`http://localhost:8080/api/properties/agent-properties/${username}`)
       .then(response => {
         const data = response.data;
-
-        console.log(data);
-
-        // Ensure the data is an array
         if (Array.isArray(data)) {
           setProperties(data);
         } else {
-          // If the data is not an array, set an empty array
           setProperties([]);
           message.error('Unexpected data format from API.');
         }
@@ -43,14 +37,13 @@ const Dashboard = () => {
         console.error('Failed to fetch properties:', error);
         message.error('Failed to load properties.');
       });
-  }, []);
+  }, [deleted]); // Fetch properties when 'deleted' state changes
 
   const handleAddProperty = () => {
     navigate('/add-property');
   };
 
   const handleEdit = (propertyId) => {
-    // console.log(propertyId);
     navigate(`/edit-property/${propertyId}`);
   };
 
@@ -58,21 +51,16 @@ const Dashboard = () => {
     navigate(`/view-property/${propertyId}`);
   };
 
-  const handleDelete = (propertyId) => {
-    // Implement the delete functionality here
-    axios.delete(`http://localhost:8080/api/properties/delete/${propertyId}`)
-      .then(() => {
-        setProperties(properties.filter(property => property.id !== propertyId));
-        message.success('Property deleted successfully.');
-      })
-      .catch(error => {
-        console.error('Failed to delete property:', error);
-        message.error('Failed to delete property.');
-      });
+  const handleDelete = async (propertyId) => {
+    try {
+      await axios.delete(`http://localhost:8080/api/properties/delete/${propertyId}`);
+      setDeleted(prev => !prev); // Toggle 'deleted' state to trigger refetch
+      message.success('Property deleted successfully.');
+    } catch (error) {
+      console.error('Failed to delete property:', error);
+      message.error('Failed to delete property.');
+    }
   };
-
-  
-
 
   const columns = [
     {
@@ -109,12 +97,12 @@ const Dashboard = () => {
     },
     {
       title: 'Occupancy Status',
-      dataIndex: 'occupancyStatus', // New field
+      dataIndex: 'occupancyStatus',
       key: 'occupancy_status',
     },
     {
       title: 'Closing Date',
-      dataIndex: 'closingDate', // New field
+      dataIndex: 'closingDate',
       key: 'closing_date',
       render: (text, record) => (
         new Date(record.closingDate).toLocaleDateString()
@@ -122,12 +110,12 @@ const Dashboard = () => {
     },
     {
       title: 'Deposit Payment Terms',
-      dataIndex: 'depositPaymentTerms', // New field
+      dataIndex: 'depositPaymentTerms',
       key: 'deposit_payment_terms',
     },
     {
       title: 'Description',
-      dataIndex: 'description', // New field
+      dataIndex: 'description',
       key: 'description',
     },
     {
@@ -135,7 +123,6 @@ const Dashboard = () => {
       key: 'actions',
       render: (text, record) => (
         <Space size="middle">
-          
           <Button 
             type="primary" 
             icon={<EditOutlined />} 
