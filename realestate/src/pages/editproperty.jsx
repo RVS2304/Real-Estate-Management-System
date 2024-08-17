@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, InputNumber, Select, message, Upload, DatePicker, Spin } from 'antd';
-import { useParams, useNavigate } from 'react-router-dom';
+import { Button, Form, Input, InputNumber, Select, message, Upload, DatePicker } from 'antd';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { UploadOutlined } from '@ant-design/icons';
 import '../style/addproperty.scss';
-import moment from 'moment';  // Import moment for date handling
+import moment from 'moment';
 
 const { TextArea } = Input;
 
@@ -23,53 +23,66 @@ const validateMessages = {
 
 const EditPropertyForm = () => {
   const [form] = Form.useForm();
-  const navigate = useNavigate();
   const { propertyId } = useParams();
-  const [loading, setLoading] = useState(true);
-  const [initialData, setInitialData] = useState(null);
-  const [fileList, setFileList] = useState([]); // Manage fileList state
+  const navigate = useNavigate();
+  const [initialValues, setInitialValues] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/properties/${propertyId}`)
-      .then(response => {
-        const data = response.data;
-        data.closingDate = moment(data.closingDate); // Convert date to moment object
-        form.setFieldsValue(data);
-        setInitialData(data);
+    const fetchProperty = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/properties/${propertyId}`);
+        const property = response.data;
 
-        if (data.propertyImage) {
-          setFileList([
-            {
-              uid: '-1',
-              name: data.propertyImage,
-              status: 'done',
-              url: `http://localhost:8080/images/${data.propertyImage}`, // Assuming image URL is like this
-            },
-          ]);
-        }
-
-        setLoading(false);
-      })
-      .catch(error => {
+        setInitialValues({
+          propertyName: property.propertyName,
+          propertyType: property.propertyType,
+          address: property.address,
+          size: property.size,
+          price: property.price,
+          occupancyStatus: property.occupancyStatus,
+          closingDate: moment(property.closingDate), // Convert to moment object
+          depositPaymentTerms: property.depositPaymentTerms,
+          description: property.description,
+          propertyImage: property.propertyImage ? [property.propertyImage] : [],
+        });
+        
+        form.setFieldsValue({
+          propertyName: property.propertyName,
+          propertyType: property.propertyType,
+          address: property.address,
+          size: property.size,
+          price: property.price,
+          occupancyStatus: property.occupancyStatus,
+          closingDate: moment(property.closingDate),
+          depositPaymentTerms: property.depositPaymentTerms,
+          description: property.description
+        });
+      } catch (error) {
         console.error('Error fetching property:', error);
-        message.error('Failed to fetch property data!');
-        setLoading(false);
-      });
-  }, [propertyId, form]);
+        message.error('Failed to fetch property details.');
+      }
+    };
 
-  const handleFinish = async (values) => {
+    fetchProperty();
+  }, [form, propertyId]);
+
+  const onFinish = async (values) => {
     const formData = new FormData();
-    formData.append('property_name', values.propertyName);
-    formData.append('property_type', values.propertyType);
-    formData.append('address', values.address);
-    formData.append('price', values.price);
-    formData.append('occupancy_status', values.occupancyStatus);
-    formData.append('closing_date', values.closingDate.format('YYYY-MM-DD')); // Ensure correct format
-    formData.append('deposit_payment_terms', values.depositPaymentTerms);
-    formData.append('description', values.description);
+    formData.append('property', JSON.stringify({
+      propertyName: values.propertyName,
+      propertyType: values.propertyType,
+      address: values.address,
+      size: values.size,
+      price: values.price,
+      occupancyStatus: values.occupancyStatus,
+      closingDate: values.closingDate.format('YYYY-MM-DD'),
+      depositPaymentTerms: values.depositPaymentTerms,
+      description: values.description,
+    }));
 
-    if (fileList.length > 0 && fileList[0].originFileObj) {
-      formData.append('property_image', fileList[0].originFileObj);
+    if (values.propertyImage && values.propertyImage.length > 0) {
+      const file = values.propertyImage[0].originFileObj;
+      formData.append('propertyImage', file);
     }
 
     try {
@@ -82,49 +95,27 @@ const EditPropertyForm = () => {
       navigate('/agent-dashboard');
     } catch (error) {
       console.error('Error updating property:', error);
-      message.error('Failed to update property!');
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      await axios.delete(`http://localhost:8080/api/properties/delete/${propertyId}`);
-      message.success('Property deleted successfully!');
-      navigate('/home');
-    } catch (error) {
-      console.error('Error deleting property:', error);
-      message.error('Failed to delete property!');
+      message.error('Failed to update property.');
     }
   };
 
   const onReset = () => {
     form.resetFields();
-    setFileList([]); // Reset fileList when form is reset
   };
-
-  const handleUploadChange = ({ fileList }) => {
-    setFileList([...fileList]);  // Ensure fileList is always an array
-  };
-
-  if (loading) {
-    return <Spin size="large" tip="Loading..."/>; // Ant Design spinner
-  }
 
   return (
     <div className="add-property-form">
       <Form
         {...layout}
         form={form}
-        name="property-form"
-        onFinish={handleFinish}
+        name="edit-property-form"
+        onFinish={onFinish}
         validateMessages={validateMessages}
         className='form-wid'
-        initialValues={initialData}
+        initialValues={initialValues}
       >
         <h2 className='title'>Edit Property</h2>
 
-        {/* Form Items */}
-        {/* Property Name */}
         <Form.Item
           name="propertyName"
           label="Property Name"
@@ -138,7 +129,6 @@ const EditPropertyForm = () => {
           </Select>
         </Form.Item>
 
-        {/* Property Type */}
         <Form.Item
           name="propertyType"
           label="Property Type"
@@ -150,7 +140,6 @@ const EditPropertyForm = () => {
           </Select>
         </Form.Item>
 
-        {/* Address */}
         <Form.Item
           name="address"
           label="Address"
@@ -159,7 +148,14 @@ const EditPropertyForm = () => {
           <TextArea rows={4} placeholder="Enter address" />
         </Form.Item>
 
-        {/* Price */}
+        <Form.Item
+          name="size"
+          label="Size (in sq.ft)"
+          rules={[{ required: true, message: 'Please input the size!' }]}
+        >
+          <InputNumber min={0} placeholder="Enter size" />
+        </Form.Item>
+
         <Form.Item
           name="price"
           label="Price"
@@ -168,7 +164,6 @@ const EditPropertyForm = () => {
           <InputNumber min={0} placeholder="Enter price" />
         </Form.Item>
 
-        {/* Occupancy Status */}
         <Form.Item
           name="occupancyStatus"
           label="Occupancy Status"
@@ -180,7 +175,6 @@ const EditPropertyForm = () => {
           </Select>
         </Form.Item>
 
-        {/* Closing Date */}
         <Form.Item
           name="closingDate"
           label="Closing Date"
@@ -189,7 +183,6 @@ const EditPropertyForm = () => {
           <DatePicker />
         </Form.Item>
 
-        {/* Deposit/Payment */}
         <Form.Item
           name="depositPaymentTerms"
           label="Deposit/Payment"
@@ -198,7 +191,6 @@ const EditPropertyForm = () => {
           <TextArea rows={4} placeholder="Enter deposit/payment terms" />
         </Form.Item>
 
-        {/* Description */}
         <Form.Item
           name="description"
           label="Description"
@@ -207,28 +199,20 @@ const EditPropertyForm = () => {
           <TextArea rows={15} placeholder="Enter description" />
         </Form.Item>
 
-        {/* Property Image */}
         <Form.Item
           name="propertyImage"
           label="Property Image"
+          rules={[{ required: true, message: 'Please upload atleast one image!' }]}
           valuePropName="fileList"
           getValueFromEvent={(e) => {
             return Array.isArray(e) ? e : e?.fileList;
           }}
-          rules={[{ required: true, message: 'Please select an image!' }]}
         >
-          <Upload 
-            name="propertyImage" 
-            listType="picture" 
-            beforeUpload={() => false}
-            fileList={fileList}
-            onChange={handleUploadChange}
-          >
+          <Upload name="propertyImage" listType="picture" beforeUpload={() => false}>
             <Button icon={<UploadOutlined />}>Click to Upload</Button>
           </Upload>
         </Form.Item>
 
-        {/* Buttons */}
         <Form.Item
           wrapperCol={{
             ...layout.wrapperCol,
@@ -238,10 +222,7 @@ const EditPropertyForm = () => {
           <Button type="primary" htmlType="submit" className='blue-button'>
             Submit
           </Button>
-          <Button type="default" htmlType="button" onClick={handleDelete} className='blue-button'>
-            Delete
-          </Button>
-          <Button type="default" htmlType="button" onClick={onReset} className='blue-button'>
+          <Button htmlType="button" onClick={onReset} className='blue-button'>
             Reset
           </Button>
         </Form.Item>
