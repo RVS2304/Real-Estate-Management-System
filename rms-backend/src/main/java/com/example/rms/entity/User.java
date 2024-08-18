@@ -33,13 +33,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private ROLE role;
 
-//    user_id int auto_increment primary key,
-//    username varchar(50) unique not null,
-//    password varchar(255) not null,
-//    role enum('admin', 'agent', 'client') not null,
-//    email varchar(100) unique,
-//    contact_number varchar(15),
-//    created_at timestamp default current_timestamp,
-//    updated_at timestamp default current_timestamp on update current_timestamp
 
+    public User(Long userid) {
+        this.userid = userid;
+    }
 }
