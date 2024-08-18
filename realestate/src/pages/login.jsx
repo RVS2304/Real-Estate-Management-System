@@ -27,7 +27,14 @@ const LoginForm = () => {
 
       if (response.data) { 
         localStorage.setItem('username', username); // Saving username to localStorage
-        navigate('/agent-dashboard'); // Redirect on successful login
+        // Navigating based on the role
+        if (role === 'admin') {
+          navigate('/admin-dashboard');
+        } else if (role === 'agent') {
+          navigate('/agent-dashboard');
+        } else if (role === 'client') {
+          navigate('/client-dashboard');
+        }
       } else {
         message.error('Login failed. Please try again.', error);
       }

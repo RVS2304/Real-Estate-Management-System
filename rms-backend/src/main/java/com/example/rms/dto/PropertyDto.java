@@ -17,6 +17,7 @@ public class PropertyDto {
     private String propertyName;
     private String propertyType;
     private String address;
+    private double size;
     private double price;
     private String occupancyStatus;
     private Date closingDate;

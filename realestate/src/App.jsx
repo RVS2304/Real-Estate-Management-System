@@ -9,7 +9,10 @@ import Dashboard from './pages/agentdashboard';
 import AdminDashboard from './pages/AdminDashboard.jsx';
 import ClientsInfo from './pages/ClientsInfo.jsx';
 import ClientDashboard from './pages/client/ClientDashboard.jsx';
+<<<<<<< HEAD
 
+=======
+>>>>>>> beb6955151efff13ec1ee458e5133544f461a56c
 
 const App = () => {
   return (

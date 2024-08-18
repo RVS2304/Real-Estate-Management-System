@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../style/dashboard.css';
 
-function RealEstateDashboard() {
+function ClientsInfo() {
   const [interestedClients, setInterestedClients] = useState([]);
   const [notInterestedClients, setNotInterestedClients] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
@@ -92,4 +92,4 @@ function RealEstateDashboard() {
   );
 }
 
-export default RealEstateDashboard;
+export default ClientsInfo;
