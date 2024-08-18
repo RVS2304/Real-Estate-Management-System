@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+// eslint-disable-next-line no-unused-vars
+import React, { useState } from 'react';
 import axios from 'axios';
+import { Table, Button, Space, message } from 'antd';
 import '../style/admindashboardstyles.css';
 
 const AdminDashboard = () => {
@@ -9,7 +11,6 @@ const AdminDashboard = () => {
 
   const handleViewChange = (viewName) => {
     setView(viewName);
-
     if (viewName === 'agents' || viewName === 'clients') {
       const role = viewName === 'agents' ? 'AGENT' : 'CLIENT';
       fetchUsersByRole(role);
@@ -21,33 +22,98 @@ const AdminDashboard = () => {
   const fetchUsersByRole = async (role) => {
     try {
       const response = await axios.get(`http://localhost:8080/api/users/${role}`);
-      console.log(`Fetched ${role}:`, response.data); // Debugging
-      setUsers(response.data); // Ensure it's an array
+      setUsers(response.data);
     } catch (error) {
       console.error(`There was an error fetching the ${role.toLowerCase()}s!`, error);
-      setUsers([]); // Reset users on error
+      setUsers([]);
+      message.error(`Failed to load ${role.toLowerCase()}s.`);
     }
   };
 
   const fetchProperties = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/properties/getAll');
-      console.log('Fetched Properties:', response.data); // Debugging
-      setProperties(response.data); // Ensure it's an array
+      setProperties(response.data);
     } catch (error) {
       console.error('There was an error fetching the properties!', error);
-      setProperties([]); // Reset properties on error
+      setProperties([]);
+      message.error('Failed to load properties.');
     }
   };
+
+  const userColumns = [
+    {
+      title: 'Name',
+      dataIndex: 'username',
+      key: 'username',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Contact No',
+      dataIndex: 'phone',
+      key: 'phone',
+    },
+  ];
+
+  const propertyColumns = [
+    {
+      title: 'Image',
+      dataIndex: 'propertyImage',
+      key: 'propertyImage',
+      render: (propertyImage) => (
+        propertyImage && propertyImage.length > 0 ? (
+          <img src={`data:image/jpeg;base64,${propertyImage}`} alt="Property" style={{ width: '100px' }} />
+        ) : (
+          'No Image'
+        )
+      ),
+    },
+    {
+      title: 'Owner Name',
+      dataIndex: 'createdBy',
+      key: 'createdBy',
+    },
+    {
+      title: 'Property Type',
+      dataIndex: 'propertyType',
+      key: 'propertyType',
+    },
+    {
+      title: 'Address',
+      dataIndex: 'address',
+      key: 'address',
+    },
+    {
+      title: 'Price',
+      dataIndex: 'price',
+      key: 'price',
+      render: (text) => `$${text}`,
+    },
+    {
+      title: 'Occupancy Status',
+      dataIndex: 'occupancyStatus',
+      key: 'occupancyStatus',
+    },
+    {
+      title: 'Deposit Payment',
+      dataIndex: 'depositPaymentTerms',
+      key: 'depositPaymentTerms',
+      render: (text) => `$${text}`,
+    },
+  ];
 
   return (
     <div className="admin-dashboard">
       <nav className="menu-bar">
         <h1 className="dashboard-title">Admin Dashboard</h1>
         <ul>
-          <li onClick={() => handleViewChange('agents')}>View Agents</li>
-          <li onClick={() => handleViewChange('clients')}>View Clients</li>
-          <li onClick={() => handleViewChange('properties')}>View Properties</li>
+          <li><Button type="link" onClick={() => handleViewChange('agents')}>View Agents</Button></li>
+          <li><Button type="link" onClick={() => handleViewChange('clients')}>View Clients</Button></li>
+          <li><Button type="link" onClick={() => handleViewChange('properties')}>View Properties</Button></li>
         </ul>
       </nav>
       <div className="content">
@@ -55,13 +121,7 @@ const AdminDashboard = () => {
           <div>
             <h2>List of Agents</h2>
             {Array.isArray(users) && users.length > 0 ? (
-              <ul>
-                {users.map(user => (
-                  <li key={user.userid}>
-                    {user.userid} | {user.username} | {user.email} | {user.phone}
-                  </li>
-                ))}
-              </ul>
+              <Table columns={userColumns} dataSource={users} rowKey="userid" />
             ) : (
               <p>No agents found</p>
             )}
@@ -72,13 +132,7 @@ const AdminDashboard = () => {
           <div>
             <h2>List of Clients</h2>
             {Array.isArray(users) && users.length > 0 ? (
-              <ul>
-                {users.map(user => (
-                  <li key={user.userid}>
-                    {user.userid} | {user.username} | {user.email} | {user.phone}
-                  </li>
-                ))}
-              </ul>
+              <Table columns={userColumns} dataSource={users} rowKey="userid" />
             ) : (
               <p>No clients found</p>
             )}
@@ -89,11 +143,7 @@ const AdminDashboard = () => {
           <div>
             <h2>List of Properties</h2>
             {Array.isArray(properties) && properties.length > 0 ? (
-              <ul>
-                {properties.map(property => (
-                  <li key={property.propertyId}>{property.propertyName}</li>
-                ))}
-              </ul>
+              <Table columns={propertyColumns} dataSource={properties} rowKey="propertyId" />
             ) : (
               <p>No properties found</p>
             )}
