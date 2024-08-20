@@ -12,10 +12,10 @@ public interface UserService {
 
     UserDto addUser(UserDto userDto);
     boolean validateUser(LoginDto loginDto);
+    UserDto getUserByUsername(String username);
+    UserDto getUserById(Long userId);
 //    UserDto updateUser(UserDto userDto);
-//    UserDto getUserById (long id);
 //    List<UserDto> getAllUsers();
 //    void deleteUser(long id);
-//    UserDto getUserByName(String name);
     List<UserDto> getUserByRole(ROLE role);
 }

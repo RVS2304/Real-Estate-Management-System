@@ -54,7 +54,7 @@ const AddPropertyForm = () => {
     formData.append('username', username);
 
     try {
-      await axios.post('http://localhost:8081/api/properties/add', formData, {
+      await axios.post('http://localhost:8080/api/properties/add', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

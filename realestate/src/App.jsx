@@ -10,10 +10,7 @@ import Dashboard from './pages/agentdashboard';
 import AdminDashboard from './pages/AdminDashboard.jsx';
 import ClientsInfo from './pages/ClientsInfo.jsx';
 import ClientDashboard from './pages/client/ClientDashboard.jsx';
-<<<<<<< HEAD
-
-=======
->>>>>>> beb6955151efff13ec1ee458e5133544f461a56c
+import PropertyDetails from './pages/propertydetails.jsx';
 
 const App = () => {
   return (
@@ -24,7 +21,7 @@ const App = () => {
           <Route path="/forgot-password" element={<ResetPassword />} />
           <Route path='/signup' element={<Signup />} />
           <Route path='/admin-dashboard' element={<AdminDashboard />} />
-          <Route path='/agent-dashboard' element={<Dashboard />} />
+          <Route path='/agent-dashboard/' element={<Dashboard />} />
           <Route path='/client-dashboard' element={<ClientDashboard />} />
           <Route path='/interested-clients' element={<ClientsInfo />} />
           <Route path="/add-property" element={<AddPropertyForm />} />

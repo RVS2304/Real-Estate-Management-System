@@ -48,6 +48,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto getUserByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        return UserMapper.maptoUserDto(user);
+    }
+
+    @Override
+    public UserDto getUserById(Long userId) {
+        User user = userRepository.findByUserid(userId);
+        return UserMapper.maptoUserDto(user);
+    }
+
+    @Override
     public List<UserDto> getUserByRole(ROLE role) {
         List<User> users = userRepository.findByRole(role);
         return users.stream().map(UserMapper::maptoUserDto).collect(Collectors.toList());

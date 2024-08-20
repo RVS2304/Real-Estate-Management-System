@@ -62,7 +62,7 @@ const Signup = () => {
         if (validate()) {
 
             try {
-                const response = await axios.post('http://localhost:8081/api/users/signup', {
+                const response = await axios.post('http://localhost:8080/api/users/signup', {
                     username: formData.name,
                     email: formData.email,
                     password: formData.password,

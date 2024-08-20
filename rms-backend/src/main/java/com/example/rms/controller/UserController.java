@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins ="*") // Allow requests from this origin
+@CrossOrigin(origins ="http://localhost:5173") // Allow requests from this origin
 public class UserController {
 
     private final UserService userService;
@@ -33,5 +33,19 @@ public class UserController {
     public ResponseEntity<List<UserDto>> getUserByRole(@PathVariable("role")ROLE role) {
         List<UserDto> users = userService.getUserByRole(role);
         return ResponseEntity.ok(users);
+    }
+
+//    get users by name
+    @GetMapping("/name/{username}")
+    public ResponseEntity<UserDto> getUserByUsername(@PathVariable("username")String username) {
+        UserDto user = userService.getUserByUsername(username);
+        return ResponseEntity.ok(user);
+    }
+
+//    get users by id
+    @GetMapping("/id/{userId}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable("userId")Long userId) {
+        UserDto user = userService.getUserById(userId);
+        return ResponseEntity.ok(user);
     }
 }

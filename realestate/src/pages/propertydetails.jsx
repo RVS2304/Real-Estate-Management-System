@@ -1,29 +1,71 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios'; // Import axios
-import '../style/propertyDetails.css'; // Ensure you create this CSS file for styling
+import axios from 'axios';
+import '../style/propertyDetails.css';
 
 const PropertyDetails = () => {
-  const { propertyId } = useParams(); // Get the property ID from the URL
+  const { propertyId } = useParams(); 
   const [property, setProperty] = useState(null);
   const [showContactPrompt, setShowContactPrompt] = useState(false);
   const [contactInfo, setContactInfo] = useState('');
+  const [message, setMessage] = useState('');
+  const [agentId, setAgentId] = useState(null);
+  const [clientId, setClientId] = useState(null);
 
+  const username = localStorage.getItem('username');
+  
+
+  // Fetch property details
   useEffect(() => {
     const fetchPropertyDetails = async () => {
       try {
-        const response = await axios.get('http://localhost:8081/api/properties/getAll');
-        // Find the property based on the propertyId from the fetched data
+        const response = await axios.get('http://localhost:8080/api/properties/getAll');
         const property = response.data.find(p => p.propertyId === parseInt(propertyId));
-        setProperty(property || null); // Set the property or null if not found
+        setProperty(property || null);
       } catch (error) {
         console.error('Error fetching property details:', error);
-        setProperty(null); // Handle the case where the property is not found
+        setProperty(null);
       }
     };
 
     fetchPropertyDetails();
   }, [propertyId]);
+
+  // Fetch agent ID based on username
+  useEffect(() => {
+    if (property && property.createdBy) {
+      const fetchAgentId = async () => {
+        const name = property.createdBy;
+        try {
+          const response = await axios.get(`http://localhost:8080/api/users/name/${name}`);
+          setAgentId(response.data.userid);
+        } catch (error) {
+          console.error('Error fetching user ID:', error);
+        }
+      };
+
+      fetchAgentId();
+    }
+  }, [property]);
+
+
+  // Fetch client ID based on username
+  useEffect(() => {
+    if (property && property.createdBy) {
+      const fetchClientId = async () => {
+        const name = username;
+        try {
+          const response = await axios.get(`http://localhost:8080/api/users/name/${name}`);
+          setClientId(response.data.userid);
+        } catch (error) {
+          console.error('Error fetching user ID:', error);
+        }
+      };
+
+      fetchClientId();
+    }
+  }, [property]);
+
 
   const handleBuyClick = () => {
     const userConfirmed = window.confirm('Are you ready to share your contact with the agent?');
@@ -35,15 +77,38 @@ const PropertyDetails = () => {
     }
   };
 
-  const handleInterestedClick = () => {
-    alert('The agent will contact you soon.');
+
+  // console.log(agentId + " " + clientId);
+  
+
+  const handleInterestedClick = async () => {
+    const userConfirmed = window.confirm('Are you sure you want to show interest in this property?');
+    if (userConfirmed) {
+      try {
+        if (agentId) {
+          await axios.post('http://localhost:8080/api/interactions/add', {
+            clientId,
+            agentId,
+            propertyId: property.propertyId,
+            interactionType: 'INTERESTED',
+            interactionText: message,
+          });
+          alert('Your interest has been recorded. The agent will contact you soon.');
+          setMessage('');
+        } else {
+          alert('Unable to retrieve user ID. Please try again later.');
+        }
+      } catch (error) {
+        console.error('Error recording interest:', error);
+        alert('There was an error recording your interest. Please try again.');
+      }
+    }
   };
 
   const handleContactSubmit = () => {
     if (contactInfo.trim()) {
       alert('Thank you! Your contact information has been received.');
       setShowContactPrompt(false);
-      // You can send the contactInfo to your server here
     } else {
       alert('Please provide your contact information.');
     }
@@ -61,14 +126,14 @@ const PropertyDetails = () => {
     <div className="property-details-container">
       <h1>{property.name}</h1>
       <img src={`data:image/jpeg;base64,${property.propertyImage}`} alt={property.name} className="property-image" />
+      <p><strong>Property ID:</strong> {property.propertyId}</p>
+      <p><strong>Agent Name:</strong> {property.createdBy}</p>
       <p><strong>Address:</strong> {property.address}</p>
-      <p><strong>Price:</strong> ${property.price}</p>
+      <p><strong>Price:</strong> INR {property.price}</p>
       <p><strong>Description:</strong> {property.description}</p>
       <p><strong>Deposit Payment Terms:</strong> ${property.depositPaymentTerms}</p>
       <p><strong>Occupancy Status:</strong> {property.occupancyStatus}</p>
       <p><strong>Closing Date:</strong> {new Date(property.closingDate).toLocaleDateString()}</p>
-      <p><strong>Created By:</strong> {property.createdBy}</p>
-      <p><strong>Property ID:</strong> {property.propertyId}</p>
 
       <div className="button-group">
         <button className="buy-button" onClick={handleBuyClick}>Buy</button>

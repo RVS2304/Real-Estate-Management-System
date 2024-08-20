@@ -4,24 +4,63 @@ import '../style/dashboard.css';
 
 function ClientsInfo() {
   const [interestedClients, setInterestedClients] = useState([]);
-  const [notInterestedClients, setNotInterestedClients] = useState([]);
+  const [clients, setClients] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
-  const [properties, setProperties] = useState([]);
   const [view, setView] = useState(''); // State to manage which view to display
 
-  // useEffect(() => {
-  //   axios.get(`http://localhost:8081/api/properties/interested-clients/${userId}`)
-  //     .then(response => setInterestedClients(response.data))
-  //     .catch(error => console.error(error));
+  const name = localStorage.getItem('username');
+  const [userId, setUserId] = useState(0);
 
-  //   axios.get('/api/clients/not-interested')
-  //     .then(response => setNotInterestedClients(response.data))
-  //     .catch(error => console.error(error));
+  // Fetch agent ID based on username
+  useEffect(() => {
+    const fetchAgentId = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/users/name/${name}`);
+        setUserId(response.data.userid);
+      } catch (error) {
+        console.error('Error fetching user ID:', error);
+      }
+    };
 
-  //   axios.get('/api/properties')
-  //     .then(response => setProperties(response.data))
-  //     .catch(error => console.error(error));
-  // }, []);
+    fetchAgentId();
+  }, [name]);
+
+  // Fetch interested clients based on agent ID
+  useEffect(() => {
+    const fetchInterestedClients = async () => {
+      if (userId) {
+        try {
+          const response = await axios.get(`http://localhost:8080/api/interactions/interested-clients/${userId}`);
+          setInterestedClients(response.data);
+        } catch (error) {
+          console.error('Error fetching interested clients:', error);
+        }
+      }
+    };
+
+    fetchInterestedClients();
+  }, [userId]);
+
+  // Fetch client details for each interested client
+  useEffect(() => {
+    const fetchClientDetails = async () => {
+      try {
+        const clientsData = await Promise.all(
+          interestedClients.map(async (client) => {
+            const response = await axios.get(`http://localhost:8080/api/users/id/${client.clientId}`);
+            return response.data;
+          })
+        );
+        setClients(clientsData);
+      } catch (error) {
+        console.error('Error fetching client details:', error);
+      }
+    };
+
+    if (interestedClients.length > 0) {
+      fetchClientDetails();
+    }
+  }, [interestedClients]);
 
   const handleSelectClient = (client) => {
     setSelectedClient(client);
@@ -50,12 +89,12 @@ function ClientsInfo() {
           <div>
             <h2>List of Interested Clients</h2>
             <ul>
-              {/* {interestedClients.map((client) => (
+              {clients.map((client) => (
                 <li key={client.id}>
-                  {client.name} - {client.email}
-                  <button onClick={() => handleSelectClient(client)}>Select</button>
+                  {client.username} - {client.email} - {client.phone}
+    
                 </li>
-              ))} */}
+              ))}
             </ul>
           </div>
         )}
@@ -63,33 +102,15 @@ function ClientsInfo() {
           <div>
             <h2>List of Not Interested Clients</h2>
             <ul>
-              {/* {notInterestedClients.map((client) => (
-                <li key={client.id}>
-                  {client.name} - {client.email}
-                  <button onClick={() => handleSelectClient(client)}>Select</button>
-                </li>
-              ))} */}
+              {/* Handle the Not Interested Clients list here */}
             </ul>
           </div>
         )}
-        {selectedClient && (
-          <div>
-            <h2>Selected Client</h2>
-            <p>Name: {selectedClient.name}</p>
-            <p>Email: {selectedClient.email}</p>
-            <h2>Properties</h2>
-            <ul>
-              {/* {properties.map((property) => (
-                <li key={property.id}>
-                  {property.name} - {property.address}
-                </li>
-              ))} */}
-            </ul>
-          </div>
-        )}
+        
       </div>
     </div>
   );
 }
 
 export default ClientsInfo;
+
