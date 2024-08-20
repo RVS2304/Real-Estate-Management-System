@@ -13,7 +13,7 @@
 /* Styling for the property image */
 .property-image {
   width: 100%;
-  height: auto; /* Maintain aspect ratio */
+  height: 100px; /* Maintain aspect ratio */
   max-height: 500px; /* Adjust the max-height as needed */
   border-radius: 8px;
   margin-bottom: 20px;
