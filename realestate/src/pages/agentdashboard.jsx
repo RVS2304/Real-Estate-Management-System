@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Table, Space, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
 
 const Dashboard = () => {
   const [properties, setProperties] = useState([]);
@@ -23,9 +23,10 @@ const Dashboard = () => {
 
   useEffect(() => {
     // Fetch properties from the API
-    axios.get(`http://localhost:8081/api/properties/agent-properties/${username}`)
+    axios.get(`http://localhost:8080/api/properties/agent-properties/${username}`)
       .then(response => {
         const data = response.data;
+        console.log(data);
         if (Array.isArray(data)) {
           setProperties(data);
         } else {
@@ -47,13 +48,13 @@ const Dashboard = () => {
     navigate(`/edit-property/${propertyId}`);
   };
 
-  const handleView = (propertyId) => {
-    navigate(`/view-property/${propertyId}`);
+  const handleClick = () => {
+    navigate(`/interested-clients/`);
   };
 
   const handleDelete = async (propertyId) => {
     try {
-      await axios.delete(`http://localhost:8081/api/properties/delete/${propertyId}`);
+      await axios.delete(`http://localhost:8080/api/properties/delete/${propertyId}`);
       setDeleted(prev => !prev); // Toggle 'deleted' state to trigger refetch
       message.success('Property deleted successfully.');
     } catch (error) {
@@ -155,6 +156,14 @@ const Dashboard = () => {
         Add Property
       </Button>
       <Table columns={columns} dataSource={properties} rowKey="propertyId" />
+      <Button
+        type="primary"
+        icon={<EyeOutlined />}
+        onClick={handleClick}
+        style={{ marginBottom: 16 }}
+      >
+        View Interested Clients
+      </Button>
     </div>
   );
 };

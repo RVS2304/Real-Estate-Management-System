@@ -1,4 +1,9 @@
-.client-navbar {
+.client-main-container {
+    text-align: center;
+    /* padding: 20px; */
+}
+
+.client-main-container h1 {
     margin-bottom: 20px;
     width: 100%;
     max-width: 1200px; /* Optional: Limit the maximum width of the navbar */
@@ -12,8 +17,6 @@
     width: 100%;
     max-width: 1200px; /* Optional: Limit the maximum width of the dashboard */
     justify-content: center; /* Center items horizontally */
-    margin-left: 250px;
-    
 }
 
 .search-bar-container {
@@ -21,8 +24,6 @@
     justify-content: center;
     width: 100%;
     margin-bottom: 20px;
-    margin-left: 250px;
-
 }
 
 .search-bar {
@@ -31,6 +32,5 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 16px;
-    
 }
 
