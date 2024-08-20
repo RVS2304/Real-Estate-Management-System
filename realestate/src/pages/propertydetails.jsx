@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios'; // Import axios
@@ -60,7 +61,7 @@ const PropertyDetails = () => {
   return (
     <div className="property-details-container">
       <h1>{property.name}</h1>
-      <img src={`data:image/jpeg;base64,${property.propertyImage}`} alt={property.name} className="property-image" />
+      <img  src={`data:image/jpeg;base64,${property.propertyImage}`} alt={property.name} className="property-image" />
       <p><strong>Address:</strong> {property.address}</p>
       <p><strong>Price:</strong> ${property.price}</p>
       <p><strong>Description:</strong> {property.description}</p>
@@ -94,3 +95,7 @@ const PropertyDetails = () => {
 };
 
 export default PropertyDetails;
+
+
+
+

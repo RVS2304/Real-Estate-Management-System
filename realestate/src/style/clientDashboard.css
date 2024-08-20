@@ -1,13 +1,3 @@
-/* clientDashboard.css */
-
-.client-main-container {
-    padding: 20px;
-    background-color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center content horizontally */
-}
-
 .client-navbar {
     margin-bottom: 20px;
     width: 100%;
