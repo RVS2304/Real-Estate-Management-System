@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:5173") // Allow requests from this origin
+@CrossOrigin(origins ="*") // Allow requests from this origin
 public class UserController {
 
     private final UserService userService;
