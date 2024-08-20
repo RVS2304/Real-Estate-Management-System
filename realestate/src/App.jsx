@@ -27,13 +27,8 @@ const App = () => {
           <Route path="/interested-clients" element={<ClientsInfo />} />
           <Route path="/add-property" element={<AddPropertyForm />} />
           <Route path="/edit-property/:propertyId" element={<EditPropertyForm />} />
-<<<<<<< HEAD
           <Route path="/property/:propertyId" element={<PropertyDetails />} />
           <Route path="/" element={<Home />} /> 
-=======
-          <Route path="/property/:propertyId" element={<PropertyDetails />} /> {/* Route for Property Details */}
-          <Route path="/" element={<Login />} /> {/* Default route */}
->>>>>>> 71ce6b7f0df75aeabc99b175800035fdfb44aca2
         </Routes>
       </div>
     </Router>
