@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Table } from 'antd';
 import '../style/dashboard.css';
 
 function ClientsInfo() {
   const [interestedClients, setInterestedClients] = useState([]);
   const [clients, setClients] = useState([]);
+  const [buyers, setBuyers] = useState([]);
   const [selectedClient, setSelectedClient] = useState(null);
   const [view, setView] = useState(''); // State to manage which view to display
 
@@ -62,14 +64,69 @@ function ClientsInfo() {
     }
   }, [interestedClients]);
 
-  const handleSelectClient = (client) => {
-    setSelectedClient(client);
-  };
+  // Fetch buyers data based on agent ID
+  useEffect(() => {
+    const fetchBuyers = async () => {
+      if (userId) {
+        try {
+          const response = await axios.get(`http://localhost:8080/api/interactions/buyers/${userId}`);
+          setBuyers(response.data);
+        } catch (error) {
+          console.error('Error fetching buyers:', error);
+        }
+      }
+    };
+
+    fetchBuyers();
+  }, [userId]);
 
   const handleViewChange = (view) => {
     setView(view);
     setSelectedClient(null); // Reset selected client on view change
   };
+
+  // Define columns for the clients and buyers tables
+  const clientColumns = [
+    {
+      title: 'Name',
+      dataIndex: 'username',
+      key: 'username',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Contact No',
+      dataIndex: 'phone',
+      key: 'phone',
+    },
+  ];
+
+  const buyerColumns = [
+    {
+      title: 'Name',
+      dataIndex: 'username',
+      key: 'username',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Contact No',
+      dataIndex: 'phone',
+      key: 'phone',
+    },
+    {
+      title: 'Interested Properties',
+      dataIndex: 'interestedProperties',
+      key: 'interestedProperties',
+      render: (text) => text.join(', '), // Assuming interestedProperties is an array
+    },
+  ];
 
   return (
     <div>
@@ -80,7 +137,7 @@ function ClientsInfo() {
             <button onClick={() => handleViewChange('interested')}>Interested Clients</button>
           </li>
           <li>
-            <button onClick={() => handleViewChange('not-interested')}>Not Interested Clients</button>
+            <button onClick={() => handleViewChange('buyers')}>Buyers</button>
           </li>
         </ul>
       </nav>
@@ -88,29 +145,19 @@ function ClientsInfo() {
         {view === 'interested' && (
           <div>
             <h2>List of Interested Clients</h2>
-            <ul>
-              {clients.map((client) => (
-                <li key={client.id}>
-                  {client.username} - {client.email} - {client.phone}
-    
-                </li>
-              ))}
-            </ul>
+            <Table columns={clientColumns} dataSource={clients} rowKey="id" />
           </div>
         )}
-        {view === 'not-interested' && (
+        {view === 'buyers' && (
           <div>
-            <h2>List of Not Interested Clients</h2>
-            <ul>
-              {/* Handle the Not Interested Clients list here */}
-            </ul>
+            <h2>List of Buyers</h2>
+            <Table columns={buyerColumns} dataSource={buyers} rowKey="id" />
           </div>
         )}
-        
+        {!view && <h2>Select a view to see the clients.</h2>}
       </div>
     </div>
   );
 }
 
 export default ClientsInfo;
-

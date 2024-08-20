@@ -49,7 +49,6 @@ const PropertyDetails = () => {
     }
   }, [property]);
 
-
   // Fetch client ID based on username
   useEffect(() => {
     if (property && property.createdBy) {
@@ -67,7 +66,6 @@ const PropertyDetails = () => {
     }
   }, [property]);
 
-
   const handleBuyClick = () => {
     const userConfirmed = window.confirm('Are you ready to share your contact with the agent?');
     if (userConfirmed) {
@@ -77,7 +75,6 @@ const PropertyDetails = () => {
       setShowContactPrompt(true);
     }
   };
-
 
   // console.log(agentId + " " + clientId);
   
