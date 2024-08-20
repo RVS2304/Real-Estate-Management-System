@@ -1,4 +1,3 @@
-// src/components/PropertyCard.js
 import React from 'react';
 import '../style/propertyCard.css';
 import { capitalizeWords } from '../utils';

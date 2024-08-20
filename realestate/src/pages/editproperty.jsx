@@ -1,10 +1,11 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, InputNumber, Select, message, Upload, DatePicker } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { UploadOutlined } from '@ant-design/icons';
 import '../style/addproperty.scss';
-import moment from 'moment';
+// import moment from 'moment';
 
 const { TextArea } = Input;
 
