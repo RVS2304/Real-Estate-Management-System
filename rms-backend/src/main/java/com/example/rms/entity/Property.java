@@ -53,4 +53,9 @@ public class Property {
 
     @Column(nullable = false)
     private String createdBy;
+
+
+    public Property(Long propertyId) {
+        this.propertyId = propertyId;
+    }
 }
