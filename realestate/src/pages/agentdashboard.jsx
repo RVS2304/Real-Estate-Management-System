@@ -23,7 +23,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     // Fetch properties from the API
-    axios.get(`http://localhost:8080/api/properties/agent-properties/${username}`)
+    axios.get(`http://localhost:8081/api/properties/agent-properties/${username}`)
       .then(response => {
         const data = response.data;
         if (Array.isArray(data)) {
@@ -53,7 +53,7 @@ const Dashboard = () => {
 
   const handleDelete = async (propertyId) => {
     try {
-      await axios.delete(`http://localhost:8080/api/properties/delete/${propertyId}`);
+      await axios.delete(`http://localhost:8081/api/properties/delete/${propertyId}`);
       setDeleted(prev => !prev); // Toggle 'deleted' state to trigger refetch
       message.success('Property deleted successfully.');
     } catch (error) {

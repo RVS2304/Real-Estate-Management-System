@@ -5,7 +5,7 @@ import '../../style/clientDashboard.css';
 
 import axios from 'axios';
 
-const ClientDashboard = () => {
+function ClientDashboard() {
 
   const username = localStorage.getItem('username'); // Retrieving username from localStorage
 
@@ -24,7 +24,7 @@ const ClientDashboard = () => {
 
   const fetchProperties = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/properties/getAll');
+      const response = await axios.get('http://localhost:8081/api/properties/getAll');
       setProperties(response.data);
     } catch (error) {
       console.error('There was an error fetching the properties!', error);
@@ -39,14 +39,16 @@ const ClientDashboard = () => {
 
   return (
     <div className="client-main-container">
-      <div className="client-navbar"><header style={headerStyle}>Welcome, {username}</header></div>
+      <div className="client-navbar"><header style={headerStyle}>Welcome {username}</header></div>
+      
       <div className="client-dashboard">
         {properties.map((property, index) => (
           <PropertyCard key={index} property={property} />
         ))}
       </div>
     </div>
+    
   );
-};
+}
 
 export default ClientDashboard;

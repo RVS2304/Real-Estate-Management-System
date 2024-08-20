@@ -30,7 +30,7 @@ const EditPropertyForm = () => {
   useEffect(() => {
     const fetchProperty = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/properties/${propertyId}`);
+        const response = await axios.get(`http://localhost:8081/api/properties/${propertyId}`);
         const property = response.data;
 
         setInitialValues({
@@ -86,7 +86,7 @@ const EditPropertyForm = () => {
     }
 
     try {
-      await axios.put(`http://localhost:8080/api/properties/edit/${propertyId}`, formData, {
+      await axios.put(`http://localhost:8081/api/properties/edit/${propertyId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

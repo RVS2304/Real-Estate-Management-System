@@ -9,19 +9,19 @@ function ClientsInfo() {
   const [properties, setProperties] = useState([]);
   const [view, setView] = useState(''); // State to manage which view to display
 
-  useEffect(() => {
-    axios.get('/api/clients/interested')
-      .then(response => setInterestedClients(response.data))
-      .catch(error => console.error(error));
+  // useEffect(() => {
+  //   axios.get(`http://localhost:8081/api/properties/interested-clients/${userId}`)
+  //     .then(response => setInterestedClients(response.data))
+  //     .catch(error => console.error(error));
 
-    axios.get('/api/clients/not-interested')
-      .then(response => setNotInterestedClients(response.data))
-      .catch(error => console.error(error));
+  //   axios.get('/api/clients/not-interested')
+  //     .then(response => setNotInterestedClients(response.data))
+  //     .catch(error => console.error(error));
 
-    axios.get('/api/properties')
-      .then(response => setProperties(response.data))
-      .catch(error => console.error(error));
-  }, []);
+  //   axios.get('/api/properties')
+  //     .then(response => setProperties(response.data))
+  //     .catch(error => console.error(error));
+  // }, []);
 
   const handleSelectClient = (client) => {
     setSelectedClient(client);
