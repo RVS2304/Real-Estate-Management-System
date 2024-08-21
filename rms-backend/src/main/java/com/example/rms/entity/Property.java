@@ -54,8 +54,12 @@ public class Property {
     @Column(nullable = false)
     private String createdBy;
 
+    @Column(nullable = false)
+    private boolean sold;
+
 
     public Property(Long propertyId) {
         this.propertyId = propertyId;
     }
+
 }

@@ -151,11 +151,10 @@ const Dashboard = () => {
         type="primary"
         icon={<PlusOutlined />}
         onClick={handleAddProperty}
-        style={{ marginBottom: 16 }}
+        style={{ marginBottom: 16, marginRight: 16 }}
       >
         Add Property
       </Button>
-      <Table columns={columns} dataSource={properties} rowKey="propertyId" />
       <Button
         type="primary"
         icon={<EyeOutlined />}
@@ -164,6 +163,8 @@ const Dashboard = () => {
       >
         View Interested Clients
       </Button>
+      <Table columns={columns} dataSource={properties} rowKey="propertyId" />
+      
     </div>
   );
 };
