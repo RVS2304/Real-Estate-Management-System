@@ -50,7 +50,10 @@ function ClientsInfo() {
         const clientsData = await Promise.all(
           interestedClients.map(async (client) => {
             const response = await axios.get(`http://localhost:8080/api/users/id/${client.clientId}`);
-            return response.data;
+            return {
+              ...response.data,
+              propertyId: client.propertyId // Add propertyId from interestedClients
+            };
           })
         );
         setClients(clientsData);
@@ -137,7 +140,7 @@ function ClientsInfo() {
             <button onClick={() => handleViewChange('interested')}>Interested Clients</button>
           </li>
           <li>
-            <button onClick={() => handleViewChange('buyers')}>Buyers</button>
+            <button onClick={() => handleViewChange('not-interested')}>Not Interested Clients</button>
           </li>
         </ul>
       </nav>
@@ -145,16 +148,25 @@ function ClientsInfo() {
         {view === 'interested' && (
           <div>
             <h2>List of Interested Clients</h2>
-            <Table columns={clientColumns} dataSource={clients} rowKey="id" />
+            <ul>
+              {clients.map((client) => (
+                <li key={client.id}>
+                  {client.username} - {client.email} - {client.phone}
+    
+                </li>
+              ))}
+            </ul>
           </div>
         )}
-        {view === 'buyers' && (
+        {view === 'not-interested' && (
           <div>
-            <h2>List of Buyers</h2>
-            <Table columns={buyerColumns} dataSource={buyers} rowKey="id" />
+            <h2>List of Not Interested Clients</h2>
+            <ul>
+              {/* Handle the Not Interested Clients list here */}
+            </ul>
           </div>
         )}
-        {!view && <h2>Select a view to see the clients.</h2>}
+        
       </div>
     </div>
   );

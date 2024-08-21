@@ -66,15 +66,37 @@ const PropertyDetails = () => {
     }
   }, [property]);
 
-  const handleBuyClick = () => {
-    const userConfirmed = window.confirm('Are you ready to share your contact with the agent?');
+  // const handleBuyClick = () => {
+  //   const userConfirmed = window.confirm('Are you ready to share your contact with the agent?');
+  //   if (userConfirmed) {
+  //     setShowContactPrompt(false);
+  //     alert('The agent will contact you soon.');
+  //   } else {
+  //     setShowContactPrompt(true);
+  //   }
+  // };
+
+  const handleBuyClick = async () => {
+    const userConfirmed = window.confirm('Are you ready to buy this property?');
     if (userConfirmed) {
-      setShowContactPrompt(false);
-      alert('The agent will contact you soon.');
-    } else {
-      setShowContactPrompt(true);
+      console.log(property);
+      console.log(clientId);
+      
+      
+        try {
+            const response = await axios.post('http://localhost:8080/api/transactions/buy', {
+                propertyId: property.propertyId,
+                clientId: clientId,
+                transactionAmount: property.price,
+            });
+            alert('Transaction initiated. The agent will contact you soon.');
+        } catch (error) {
+            console.error('Error initiating transaction:', error);
+            alert('There was an error processing your request. Please try again.');
+        }
     }
   };
+
 
   // console.log(agentId + " " + clientId);
   
@@ -129,7 +151,7 @@ const PropertyDetails = () => {
       <p><strong>Address:</strong> {property.address}</p>
       <p><strong>Price:</strong> INR {property.price}</p>
       <p><strong>Description:</strong> {property.description}</p>
-      <p><strong>Deposit Payment Terms:</strong> ${property.depositPaymentTerms}</p>
+      <p><strong>Deposit Payment Terms:</strong> INR {property.depositPaymentTerms}</p>
       <p><strong>Occupancy Status:</strong> {property.occupancyStatus}</p>
       <p><strong>Closing Date:</strong> {new Date(property.closingDate).toLocaleDateString()}</p>
 

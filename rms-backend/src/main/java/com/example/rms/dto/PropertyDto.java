@@ -25,4 +25,5 @@ public class PropertyDto {
     private String description;
     private byte[] propertyImage;
     private String createdBy;
+    private boolean sold;
 }

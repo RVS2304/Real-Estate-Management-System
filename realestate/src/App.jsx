@@ -28,7 +28,7 @@ const App = () => {
           <Route path="/add-property" element={<AddPropertyForm />} />
           <Route path="/edit-property/:propertyId" element={<EditPropertyForm />} />
           <Route path="/property/:propertyId" element={<PropertyDetails />} />
-          <Route path="/" element={<Home />} /> 
+          <Route path="/" element={<Login />} /> 
         </Routes>
       </div>
     </Router>

@@ -18,7 +18,8 @@ public class PropertyMapper {
                 property.getDepositPaymentTerms(),
                 property.getDescription(),
                 property.getPropertyImage(),
-                property.getCreatedBy()
+                property.getCreatedBy(),
+                property.isSold()
         );
     }
 
@@ -35,7 +36,8 @@ public class PropertyMapper {
                 propertyDto.getDepositPaymentTerms(),
                 propertyDto.getDescription(),
                 propertyDto.getPropertyImage(),
-                propertyDto.getCreatedBy()
+                propertyDto.getCreatedBy(),
+                propertyDto.isSold()
         );
     }
 }
