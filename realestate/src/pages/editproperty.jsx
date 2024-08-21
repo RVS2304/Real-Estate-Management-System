@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { UploadOutlined } from '@ant-design/icons';
 import '../style/addproperty.scss';
-// import moment from 'moment';
+import moment from 'moment';
 
 const { TextArea } = Input;
 

@@ -89,14 +89,14 @@ function ClientsInfo() {
   };
 
   // Define columns for the clients and buyers tables
-  const clientColumns = [
+  const interestedClientColumns = [
     {
-      title: 'Name',
+      title: 'Client Name',
       dataIndex: 'username',
       key: 'username',
     },
     {
-      title: 'Email',
+      title: 'Client Email',
       dataIndex: 'email',
       key: 'email',
     },
@@ -105,6 +105,11 @@ function ClientsInfo() {
       dataIndex: 'phone',
       key: 'phone',
     },
+    {
+      title: 'Property Id',
+      dataIndex: 'propertyId',
+      key: 'propertyId'
+    }
   ];
 
   const buyerColumns = [
@@ -140,7 +145,7 @@ function ClientsInfo() {
             <button onClick={() => handleViewChange('interested')}>Interested Clients</button>
           </li>
           <li>
-            <button onClick={() => handleViewChange('not-interested')}>Not Interested Clients</button>
+            {/* <button onClick={() => handleViewChange('interested')}>Not Interested Clients</button> */}
           </li>
         </ul>
       </nav>
@@ -148,25 +153,19 @@ function ClientsInfo() {
         {view === 'interested' && (
           <div>
             <h2>List of Interested Clients</h2>
-            <ul>
-              {clients.map((client) => (
-                <li key={client.id}>
-                  {client.username} - {client.email} - {client.phone}
-    
-                </li>
-              ))}
-            </ul>
+            <Table columns={interestedClientColumns} dataSource={clients} rowKey="propertyId" />
           </div>
         )}
-        {view === 'not-interested' && (
-          <div>
-            <h2>List of Not Interested Clients</h2>
-            <ul>
+        {/* {view === 'not-interested' && ( */}
+          {/* <div> */}
+            {/* <h2>List of Not Interested Clients</h2> */}
+            {/* <ul> */}
               {/* Handle the Not Interested Clients list here */}
-            </ul>
-          </div>
-        )}
-        
+            {/* </ul> */}
+          {/* </div> */}
+        {/* )} */}
+
+
       </div>
     </div>
   );
