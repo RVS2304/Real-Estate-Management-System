@@ -42,7 +42,7 @@ const EditPropertyForm = () => {
           price: property.price,
           occupancyStatus: property.occupancyStatus,
           closingDate: moment(property.closingDate), // Convert to moment object
-          depositPaymentTerms: property.depositPaymentTerms,
+          depositPayment: property.depositPayment,
           description: property.description,
           propertyImage: property.propertyImage ? [property.propertyImage] : [],
         });
@@ -55,7 +55,7 @@ const EditPropertyForm = () => {
           price: property.price,
           occupancyStatus: property.occupancyStatus,
           closingDate: moment(property.closingDate),
-          depositPaymentTerms: property.depositPaymentTerms,
+          depositPayment: property.depositPayment,
           description: property.description
         });
       } catch (error) {
@@ -77,7 +77,7 @@ const EditPropertyForm = () => {
       price: values.price,
       occupancyStatus: values.occupancyStatus,
       closingDate: values.closingDate.format('YYYY-MM-DD'),
-      depositPaymentTerms: values.depositPaymentTerms,
+      depositPayment: values.depositPayment,
       description: values.description,
     }));
 
@@ -185,11 +185,11 @@ const EditPropertyForm = () => {
         </Form.Item>
 
         <Form.Item
-          name="depositPaymentTerms"
-          label="Deposit/Payment"
-          rules={[{ required: true, message: 'Please input deposit/payment terms!' }]}
+          name="depositPayment"
+          label="Deposit Payment"
+          rules={[{ required: true, message: 'Please input deposit payment!' }]}
         >
-          <TextArea rows={4} placeholder="Enter deposit/payment terms" />
+          <InputNumber min={0} placeholder="Enter deposit payment" />
         </Form.Item>
 
         <Form.Item

@@ -155,10 +155,10 @@ const AddPropertyForm = () => {
 
         <Form.Item
           name="depositPayment"
-          label="Deposit/Payment"
-          rules={[{ required: true, message: 'Please input deposit/payment!' }]}
+          label="Deposit Payment"
+          rules={[{ required: true, message: 'Please input deposit payment!' }]}
         >
-          <TextArea rows={4} placeholder="Enter deposit/payment " />
+          <InputNumber min={0} placeholder="Enter deposit payment" />
         </Form.Item>
 
         <Form.Item
