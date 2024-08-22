@@ -74,7 +74,7 @@ strong {
 }
 
 /* Styling for the contact prompt */
-.contact-prompt {
+.message-prompt, .contact-prompt {
   margin-top: 20px;
   padding: 20px;
   background-color: #fff;
@@ -83,7 +83,7 @@ strong {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.contact-input {
+.message-input, .contact-input {
   width: 100%;
   padding: 10px;
   font-size: 16px;
@@ -92,8 +92,8 @@ strong {
   margin-bottom: 10px;
 }
 
-.contact-submit-button,
-.contact-close-button {
+.message-submit-button, .contact-submit-button,
+.message-close-button,.contact-close-button {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
@@ -102,17 +102,17 @@ strong {
   margin-right: 10px;
 }
 
-.contact-submit-button {
+.contact-submit-button, .message-submit-button {
   background-color: #28a745; /* Green color for Submit */
   color: white;
 }
 
-.contact-close-button {
+.contact-close-button, .message-close-button {
   background-color: #dc3545; /* Red color for Close */
   color: white;
 }
 
-.contact-submit-button:hover,
-.contact-close-button:hover {
+.contact-submit-button:hover, .message-submit-button:hover
+.contact-close-button:hover, .message-close-button:hover {
   opacity: 0.9;
 }

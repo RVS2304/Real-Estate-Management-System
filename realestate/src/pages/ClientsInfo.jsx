@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table } from 'antd';
+import { Table, Button } from 'antd';
 import '../style/dashboard.css';
 
 function ClientsInfo() {
   const [interestedClients, setInterestedClients] = useState([]);
   const [clients, setClients] = useState([]);
-  const [buyers, setBuyers] = useState([]);
-  const [selectedClient, setSelectedClient] = useState(null);
-  const [view, setView] = useState(''); // State to manage which view to display
+  const [transactions, setTransactions] = useState([]);
+  const [view, setView] = useState('');
 
   const name = localStorage.getItem('username');
   const [userId, setUserId] = useState(0);
@@ -52,7 +51,9 @@ function ClientsInfo() {
             const response = await axios.get(`http://localhost:8080/api/users/id/${client.clientId}`);
             return {
               ...response.data,
-              propertyId: client.propertyId // Add propertyId from interestedClients
+              propertyId: client.propertyId,
+              interactionType: client.interactionType,
+              interactionText: client.interactionText
             };
           })
         );
@@ -67,29 +68,71 @@ function ClientsInfo() {
     }
   }, [interestedClients]);
 
-  // Fetch buyers data based on agent ID
+  // Fetch transactions and combine with client details
   useEffect(() => {
-    const fetchBuyers = async () => {
+    const fetchTransactions = async () => {
       if (userId) {
         try {
-          const response = await axios.get(`http://localhost:8080/api/interactions/buyers/${userId}`);
-          setBuyers(response.data);
+          const response = await axios.get(`http://localhost:8080/api/transactions/get-by-agent-id/${userId}`);
+          const transactionsData = await Promise.all(
+            response.data.map(async (transaction) => {
+              const clientResponse = await axios.get(`http://localhost:8080/api/users/id/${transaction.clientId}`);
+              return {
+                ...transaction,
+                username: clientResponse.data.username,
+                email: clientResponse.data.email,
+                phone: clientResponse.data.phone
+              };
+            })
+          );
+          setTransactions(transactionsData);
         } catch (error) {
-          console.error('Error fetching buyers:', error);
+          console.error('Error fetching transactions:', error);
         }
       }
     };
 
-    fetchBuyers();
+    fetchTransactions();
   }, [userId]);
+
+  // Function to handle status update
+  const handleStatusUpdate = async (transactionId) => {
+    try {
+      await axios.put(`http://localhost:8080/api/transactions/complete/${transactionId}`, {
+        // transactionStatus: 'COMPLETED'
+      });
+      // Refresh the transactions list after updating
+      const response = await axios.get(`http://localhost:8080/api/transactions/get-by-agent-id/${userId}`);
+      const updatedTransactionsData = await Promise.all(
+        response.data.map(async (transaction) => {
+          const clientResponse = await axios.get(`http://localhost:8080/api/users/id/${transaction.clientId}`);
+          return {
+            ...transaction,
+            username: clientResponse.data.username,
+            email: clientResponse.data.email,
+            phone: clientResponse.data.phone
+          };
+        })
+      );
+      setTransactions(updatedTransactionsData);
+      alert('Transaction status updated to completed.');
+    } catch (error) {
+      console.error('Error updating transaction status:', error);
+      alert('Error updating transaction status. Please try again.');
+    }
+  };
 
   const handleViewChange = (view) => {
     setView(view);
-    setSelectedClient(null); // Reset selected client on view change
   };
 
   // Define columns for the clients and buyers tables
   const interestedClientColumns = [
+    {
+      title: 'Property Id',
+      dataIndex: 'propertyId',
+      key: 'propertyId'
+    },
     {
       title: 'Client Name',
       dataIndex: 'username',
@@ -106,15 +149,25 @@ function ClientsInfo() {
       key: 'phone',
     },
     {
-      title: 'Property Id',
-      dataIndex: 'propertyId',
-      key: 'propertyId'
+      title: 'Interaction Type',
+      dataIndex: 'interactionType',
+      key: 'interactionType'
+    },
+    {
+      title: 'Interaction Text',
+      dataIndex: 'interactionText',
+      key: 'interactionText'
     }
   ];
 
-  const buyerColumns = [
+  const transactionColumns = [
     {
-      title: 'Name',
+      title: 'Property Id',
+      dataIndex: 'propertyId',
+      key: 'propertyId'
+    },
+    {
+      title: 'Client Name',
       dataIndex: 'username',
       key: 'username',
     },
@@ -129,11 +182,29 @@ function ClientsInfo() {
       key: 'phone',
     },
     {
-      title: 'Interested Properties',
-      dataIndex: 'interestedProperties',
-      key: 'interestedProperties',
-      render: (text) => text.join(', '), // Assuming interestedProperties is an array
+      title: 'Transaction Amount',
+      dataIndex: 'transactionAmount',
+      key: 'transactionAmount',
     },
+    {
+      title: 'Transaction Date',
+      dataIndex: 'transactionDate',
+      key: 'transactionDate',
+    },
+    {
+      title: 'Transaction Status',
+      dataIndex: 'transactionStatus',
+      key: 'transactionStatus',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text, record) => (
+        record.transactionStatus === 'INITIATED' && (
+          <Button onClick={() => handleStatusUpdate(record.transactionId)}>Mark as Completed</Button>
+        )
+      ),
+    }
   ];
 
   return (
@@ -145,7 +216,7 @@ function ClientsInfo() {
             <button onClick={() => handleViewChange('interested')}>Interested Clients</button>
           </li>
           <li>
-            {/* <button onClick={() => handleViewChange('interested')}>Not Interested Clients</button> */}
+            <button onClick={() => handleViewChange('transactions')}>Transaction Details</button>
           </li>
         </ul>
       </nav>
@@ -156,16 +227,12 @@ function ClientsInfo() {
             <Table columns={interestedClientColumns} dataSource={clients} rowKey="propertyId" />
           </div>
         )}
-        {/* {view === 'not-interested' && ( */}
-          {/* <div> */}
-            {/* <h2>List of Not Interested Clients</h2> */}
-            {/* <ul> */}
-              {/* Handle the Not Interested Clients list here */}
-            {/* </ul> */}
-          {/* </div> */}
-        {/* )} */}
-
-
+        {view === 'transactions' && (
+          <div>
+            <h2>List of Transactions</h2>
+            <Table columns={transactionColumns} dataSource={transactions} rowKey="transactionId" />
+          </div>
+        )}
       </div>
     </div>
   );

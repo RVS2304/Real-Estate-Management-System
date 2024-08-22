@@ -21,7 +21,7 @@ public class PropertyDto {
     private double price;
     private String occupancyStatus;
     private Date closingDate;
-    private String depositPaymentTerms;
+    private Long depositPayment;
     private String description;
     private byte[] propertyImage;
     private String createdBy;

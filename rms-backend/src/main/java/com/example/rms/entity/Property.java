@@ -42,7 +42,7 @@ public class Property {
     private Date closingDate;
 
     @Column(nullable = false)
-    private String depositPaymentTerms;
+    private Long depositPayment;
 
     @Column(nullable = false, length = 2000)
     private String description;
@@ -55,7 +55,7 @@ public class Property {
     private String createdBy;
 
     @Column(nullable = false)
-    private boolean sold;
+    private boolean sold = false;
 
 
     public Property(Long propertyId) {

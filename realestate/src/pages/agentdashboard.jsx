@@ -110,9 +110,9 @@ const Dashboard = () => {
       ),
     },
     {
-      title: 'Deposit Payment Terms',
-      dataIndex: 'depositPaymentTerms',
-      key: 'deposit_payment_terms',
+      title: 'Deposit Payment',
+      dataIndex: 'depositPayment',
+      key: 'deposit_payment',
     },
     {
       title: 'Description',

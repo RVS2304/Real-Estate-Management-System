@@ -39,7 +39,7 @@ const AddPropertyForm = () => {
       price: values.price,
       occupancyStatus: values.occupancyStatus,
       closingDate: values.closingDate.format('YYYY-MM-DD'), // Convert to date string
-      depositPaymentTerms: values.depositPaymentTerms,
+      depositPayment: values.depositPayment,
       description: values.description,
     }));
     
@@ -154,11 +154,11 @@ const AddPropertyForm = () => {
         </Form.Item>
 
         <Form.Item
-          name="depositPaymentTerms"
+          name="depositPayment"
           label="Deposit/Payment"
-          rules={[{ required: true, message: 'Please input deposit/payment terms!' }]}
+          rules={[{ required: true, message: 'Please input deposit/payment!' }]}
         >
-          <TextArea rows={4} placeholder="Enter deposit/payment terms" />
+          <TextArea rows={4} placeholder="Enter deposit/payment " />
         </Form.Item>
 
         <Form.Item

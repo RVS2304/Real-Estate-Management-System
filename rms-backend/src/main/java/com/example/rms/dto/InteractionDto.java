@@ -1,8 +1,6 @@
 package com.example.rms.dto;
 
 import com.example.rms.entity.InteractionType;
-import com.example.rms.entity.Property;
-import com.example.rms.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

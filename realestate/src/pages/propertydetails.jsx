@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -12,10 +11,10 @@ const PropertyDetails = () => {
   const [message, setMessage] = useState('');
   const [agentId, setAgentId] = useState(null);
   const [clientId, setClientId] = useState(null);
+  const [showMessagePrompt, setShowMessagePrompt] = useState(false);
 
   const username = localStorage.getItem('username');
   
-
   // Fetch property details
   useEffect(() => {
     const fetchPropertyDetails = async () => {
@@ -66,44 +65,33 @@ const PropertyDetails = () => {
     }
   }, [property]);
 
-  // const handleBuyClick = () => {
-  //   const userConfirmed = window.confirm('Are you ready to share your contact with the agent?');
-  //   if (userConfirmed) {
-  //     setShowContactPrompt(false);
-  //     alert('The agent will contact you soon.');
-  //   } else {
-  //     setShowContactPrompt(true);
-  //   }
-  // };
-
   const handleBuyClick = async () => {
     const userConfirmed = window.confirm('Are you ready to buy this property?');
     if (userConfirmed) {
-      console.log(property);
-      console.log(clientId);
-      
-      
-        try {
-            const response = await axios.post('http://localhost:8080/api/transactions/buy', {
-                propertyId: property.propertyId,
-                clientId: clientId,
-                transactionAmount: property.price,
-            });
-            alert('Transaction initiated. The agent will contact you soon.');
-        } catch (error) {
-            console.error('Error initiating transaction:', error);
-            alert('There was an error processing your request. Please try again.');
-        }
+      try {
+        const response = await axios.post('http://localhost:8080/api/transactions/add', {
+          agentId: agentId,
+          clientId: clientId,
+          propertyId: property.propertyId,
+          transactionAmount: property.depositPayment,
+          transactionStatus: "INITIATED"
+        });
+
+        console.log(response);
+        alert('Transaction initiated. The agent will contact you soon.');
+      } catch (error) {
+        console.error('Error initiating transaction:', error);
+        alert('There was an error processing your request. Please try again.');
+      }
     }
   };
 
+  const handleInterestedClick = () => {
+    setShowMessagePrompt(true);
+  };
 
-  // console.log(agentId + " " + clientId);
-  
-
-  const handleInterestedClick = async () => {
-    const userConfirmed = window.confirm('Are you sure you want to show interest in this property?');
-    if (userConfirmed) {
+  const handleMessageSubmit = async () => {
+    if (message.trim()) {
       try {
         if (agentId) {
           await axios.post('http://localhost:8080/api/interactions/add', {
@@ -115,6 +103,7 @@ const PropertyDetails = () => {
           });
           alert('Your interest has been recorded. The agent will contact you soon.');
           setMessage('');
+          setShowMessagePrompt(false);
         } else {
           alert('Unable to retrieve user ID. Please try again later.');
         }
@@ -122,6 +111,8 @@ const PropertyDetails = () => {
         console.error('Error recording interest:', error);
         alert('There was an error recording your interest. Please try again.');
       }
+    } else {
+      alert('Please provide a message.');
     }
   };
 
@@ -151,7 +142,7 @@ const PropertyDetails = () => {
       <p><strong>Address:</strong> {property.address}</p>
       <p><strong>Price:</strong> INR {property.price}</p>
       <p><strong>Description:</strong> {property.description}</p>
-      <p><strong>Deposit Payment Terms:</strong> INR {property.depositPaymentTerms}</p>
+      <p><strong>Deposit Payment:</strong> INR {property.depositPayment}</p>
       <p><strong>Occupancy Status:</strong> {property.occupancyStatus}</p>
       <p><strong>Closing Date:</strong> {new Date(property.closingDate).toLocaleDateString()}</p>
 
@@ -159,6 +150,20 @@ const PropertyDetails = () => {
         <button className="buy-button" onClick={handleBuyClick}>Buy</button>
         <button className="interested-button" onClick={handleInterestedClick}>Interested</button>
       </div>
+
+      {showMessagePrompt && (
+        <div className="message-prompt">
+          <p>Please enter a message for the agent: (Your Contact info will be shared with the agent)</p>
+          <textarea
+            placeholder="Enter your message here"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="message-input"
+          />
+          <button onClick={handleMessageSubmit} className="message-submit-button">Submit</button>
+          <button onClick={() => setShowMessagePrompt(false)} className="message-close-button">Close</button>
+        </div>
+      )}
 
       {showContactPrompt && (
         <div className="contact-prompt">

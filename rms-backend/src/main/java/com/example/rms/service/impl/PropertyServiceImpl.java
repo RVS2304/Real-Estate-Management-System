@@ -70,7 +70,7 @@ public class PropertyServiceImpl implements PropertyService {
         existingProperty.setPrice(propertyDto.getPrice());
         existingProperty.setOccupancyStatus(propertyDto.getOccupancyStatus());
         existingProperty.setClosingDate(propertyDto.getClosingDate());
-        existingProperty.setDepositPaymentTerms(propertyDto.getDepositPaymentTerms());
+        existingProperty.setDepositPayment(propertyDto.getDepositPayment());
         existingProperty.setDescription(propertyDto.getDescription());
 
         if(propertyImage != null && !propertyImage.isEmpty()) {
