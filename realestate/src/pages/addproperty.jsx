@@ -178,7 +178,12 @@ const AddPropertyForm = () => {
             return Array.isArray(e) ? e : e?.fileList;
           }}
         >
-          <Upload name="propertyImage" listType="picture" beforeUpload={() => false}>
+          <Upload 
+            name="propertyImages" 
+            listType="picture" 
+            multiple 
+            beforeUpload={() => false}
+          >
             <Button icon={<UploadOutlined />}>Click to Upload</Button>
           </Upload>
         </Form.Item>
