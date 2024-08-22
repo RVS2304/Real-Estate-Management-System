@@ -10,6 +10,22 @@
   margin-top: 10%;
 }
 
+.property-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* Adjust spacing between images */
+}
+
+
+.property-image {
+  width: 200px; /* Adjust size as needed */
+  height: auto;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 /* Styling for the property image */
 .property-image {
   width: 100%;

@@ -136,7 +136,19 @@ const PropertyDetails = () => {
   return (
     <div className="property-details-container">
       <h1>{property.name}</h1>
-      <img src={`data:image/jpeg;base64,${property.propertyImage}`} alt={property.name} className="property-image" />
+
+      {/* Render multiple images */}
+      <div className="property-images">
+        {property.propertyImages && property.propertyImages.map((image, index) => (
+          <img 
+            key={index} 
+            src={`data:image/jpeg;base64,${image}`} 
+            alt={`${property.name} ${index + 1}`} 
+            className="property-image"
+          />
+        ))}
+      </div>
+
       <p><strong>Property ID:</strong> {property.propertyId}</p>
       <p><strong>Agent Name:</strong> {property.createdBy}</p>
       <p><strong>Address:</strong> {property.address}</p>
