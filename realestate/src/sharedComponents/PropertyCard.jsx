@@ -6,9 +6,14 @@ import { useNavigate } from 'react-router-dom';
 const PropertyList = ({ properties, searchQuery }) => {
     const navigate = useNavigate();
 
+    // Convert searchQuery to lower case for case-insensitive comparison
+    const query = searchQuery.toLowerCase();
+
     const filteredProperties = properties.filter(property => {
-        const locationMatch = property.address.toLowerCase().includes(searchQuery.toLowerCase());
-        return locationMatch;
+        const locationMatch = property.address.toLowerCase().includes(query);
+        const priceMatch = property.price.toString().includes(query); // Ensure price is compared as a string
+
+        return locationMatch || priceMatch; // Include properties that match either location or price
     });
 
     const handleClick = (propertyId) => {
