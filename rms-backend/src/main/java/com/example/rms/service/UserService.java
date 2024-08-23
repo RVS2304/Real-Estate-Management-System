@@ -18,4 +18,5 @@ public interface UserService {
 //    List<UserDto> getAllUsers();
 //    void deleteUser(long id);
     List<UserDto> getUserByRole(ROLE role);
+    UserDto getUserByEmail(String email);
 }

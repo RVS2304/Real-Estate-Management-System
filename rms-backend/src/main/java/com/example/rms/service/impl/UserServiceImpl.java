@@ -64,4 +64,11 @@ public class UserServiceImpl implements UserService {
         List<User> users = userRepository.findByRole(role);
         return users.stream().map(UserMapper::maptoUserDto).collect(Collectors.toList());
     }
+
+    @Override
+    public UserDto getUserByEmail(String email) {
+        User users = userRepository.findByEmail(email);
+
+        return UserMapper.maptoUserDto(users);
+    }
 }
