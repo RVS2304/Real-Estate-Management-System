@@ -3,7 +3,7 @@ import '../style/propertyCard.css';
 import { capitalizeWords } from '../utils';
 import { useNavigate } from 'react-router-dom';
 
-const PropertyList = ({ property }) => {
+const PropertyCard = ({ property }) => {
     const navigate = useNavigate();
 
     const handleClick = (propertyId) => {
@@ -32,4 +32,4 @@ const PropertyList = ({ property }) => {
     );
 };
 
-export default PropertyList;
+export default PropertyCard;
