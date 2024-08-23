@@ -19,4 +19,6 @@ public interface UserService {
 //    void deleteUser(long id);
     List<UserDto> getUserByRole(ROLE role);
     UserDto getUserByEmail(String email);
+    boolean sendPasswordResetLink(String email);
+    boolean resetPassword(String token, String password);
 }

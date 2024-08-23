@@ -12,6 +12,7 @@ import ClientsInfo from './pages/ClientsInfo.jsx';
 import ClientDashboard from './pages/client/ClientDashboard.jsx';
 import PropertyDetails from './pages/propertydetails.jsx';
 import Home from './pages/homepage.jsx'; 
+import SetPassword from './pages/SetPassword';
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="/interested-clients" element={<ClientsInfo />} />
           <Route path="/add-property" element={<AddPropertyForm />} />
           <Route path="/edit-property/:propertyId" element={<EditPropertyForm />} />
+          <Route path="/reset-password" element={<SetPassword />} />
           <Route path="/property/:propertyId" element={<PropertyDetails />} />
           <Route path="/" element={<Home />} /> 
         </Routes>
