@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Table, Space, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, EyeOutlined, LogoutOutlined, PlusOutlined } from '@ant-design/icons';
 
 const Dashboard = () => {
   const [properties, setProperties] = useState([]);
@@ -52,6 +52,10 @@ const Dashboard = () => {
     navigate(`/interested-clients/`);
   };
 
+  const handleLogout = () => {
+    navigate(`/login`);
+  };
+
   const handleDelete = async (propertyId) => {
     try {
       await axios.delete(`http://localhost:8080/api/properties/delete/${propertyId}`);
@@ -60,6 +64,7 @@ const Dashboard = () => {
     } catch (error) {
       console.error('Failed to delete property:', error);
       message.error('Failed to delete property.');
+      alert("This property cannot be deleted because it has transactions or client interest. Please complete or cancel all transactions and interactions before attempting to delete.")
     }
   };
 
@@ -146,7 +151,17 @@ const Dashboard = () => {
 
   return (
     <div>
-      <header style={headerStyle}>Welcome, {username}</header>
+      <div className="agent-navbar">
+        <header className='agent-welcome-message'>Welcome, {username}</header>
+        <Button
+          danger
+          icon={<LogoutOutlined />}
+          onClick={handleLogout}
+          className='logout-button'
+        >
+          Logout
+        </Button>
+      </div>
       <Button
         type="primary"
         icon={<PlusOutlined />}
@@ -164,7 +179,6 @@ const Dashboard = () => {
         View Interested Clients
       </Button>
       <Table columns={columns} dataSource={properties} rowKey="propertyId" />
-      
     </div>
   );
 };

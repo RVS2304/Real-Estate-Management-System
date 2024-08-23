@@ -6,6 +6,7 @@ import com.example.rms.entity.Property;
 public class PropertyMapper {
 
     public static PropertyDto maptoPropertyDto(Property property) {
+
         return new PropertyDto(
                 property.getPropertyId(),
                 property.getPropertyName(),
@@ -24,7 +25,7 @@ public class PropertyMapper {
     }
 
     public static Property maptoProperty(PropertyDto propertyDto) {
-        return new Property(
+        Property property = new Property(
                 propertyDto.getPropertyId(),
                 propertyDto.getPropertyName(),
                 propertyDto.getPropertyType(),
@@ -39,5 +40,8 @@ public class PropertyMapper {
                 propertyDto.getCreatedBy(),
                 propertyDto.isSold()
         );
+
+        return property;
     }
+
 }

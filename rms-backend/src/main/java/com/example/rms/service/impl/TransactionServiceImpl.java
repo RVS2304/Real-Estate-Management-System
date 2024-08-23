@@ -39,19 +39,17 @@ public class TransactionServiceImpl implements TransactionService {
         User agent = userRepository.findByUserid(transactionDto.getAgentId());
         Optional<Property> propertyOptional = propertyRepository.findById(transactionDto.getPropertyId());
         if (propertyOptional.isEmpty()) {
-            throw new Exception("Property not found");
+            throw new IllegalArgumentException("Property not found");
         }
         Property property = propertyOptional.get();
 
         if (property.isSold()) {
-                throw new Exception("Property has already been sold");
-            }
+            throw new IllegalArgumentException("Property has already been sold");
+        }
 
-            if (!Objects.equals(property.getDepositPayment(), transactionDto.getTransactionAmount())) {
-                System.out.println(property.getDepositPayment());
-                System.out.println(transactionDto.getTransactionAmount());
-                throw new Exception("Incorrect amount provided for the property");
-            }
+        if (!Objects.equals(property.getDepositPayment(), transactionDto.getTransactionAmount())) {
+            throw new IllegalArgumentException("Incorrect amount provided for the property");
+        }
 
         Transaction transaction = TransactionMapper.maptoTransaction(transactionDto);
         transaction.setClient(client);
@@ -72,39 +70,6 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
 
-//    @Override
-//    public TransactionDto buyProperty(Long propertyId, Long clientId, Long amount) throws Exception {
-//        Optional<Property> propertyOptional = propertyRepository.findById(propertyId);
-//        if (propertyOptional.isPresent()) {
-//            Property property = propertyOptional.get();
-//
-//            if (property.isSold()) {
-//                throw new Exception("Property has already been sold");
-//            }
-//
-//            if (property.getPrice() != amount) {
-//                throw new Exception("Incorrect amount provided for the property");
-//            }
-//
-//            // Create a transaction
-//            Transaction transaction = new Transaction();
-//            transaction.setPropertyId(propertyId);
-//            transaction.setClientId(clientId);
-//            transaction.setTransactionDate(new Date());
-//            transaction.setTransactionAmount(amount);
-//            transaction.setTransactionStatus("Initiated");
-//
-//            Transaction savedTransaction = transactionRepository.save(transaction);
-//
-////            Mark the property as sold
-////            property.setSold(true);
-////            propertyRepository.save(property);
-//
-//            return TransactionMapper.maptoTransactionDto(savedTransaction);
-//        } else {
-//            throw new Exception("Property not found");
-//        }
-//    }
 
     @Override
     public TransactionDto completeTransaction(Long transactionId) throws Exception {

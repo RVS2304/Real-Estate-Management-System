@@ -22,7 +22,7 @@ public class PropertyController {
         this.propertyService = propertyService;
     }
 
-//    Add Property REST API
+    //    Add Property REST API
     @PostMapping("/add")
     public ResponseEntity<PropertyDto> addProperty(@RequestPart("property") String propertyJson, @RequestPart("propertyImage") MultipartFile propertyImage, @RequestPart("username") String username) {
 
@@ -36,14 +36,14 @@ public class PropertyController {
         }
     }
 
-//    get property by id
+    //    get property by id
     @GetMapping("/{propertyId}")
     public ResponseEntity<PropertyDto> getProperty(@PathVariable("propertyId") Long propertyId) {
         PropertyDto propertyDto = propertyService.getProperty(propertyId);
         return ResponseEntity.ok(propertyDto);
     }
 
-//    get properties by agent
+    //    get properties by agent
     @GetMapping("/agent-properties/{username}")
     public ResponseEntity<List<PropertyDto>> getPropertiesForAgent(@PathVariable("username") String username) {
         List<PropertyDto> properties = propertyService.getPropertiesByAgent(username);
@@ -51,7 +51,7 @@ public class PropertyController {
         return ResponseEntity.ok(properties);
     }
 
-//    update properties by agent
+    //    update properties by agent
     @PutMapping("/edit/{propertyId}")
     public ResponseEntity<PropertyDto> updateProperty(@PathVariable Long propertyId, @RequestPart("property") String propertyJson, @RequestPart("propertyImage") MultipartFile propertyImage) {
 
@@ -66,14 +66,14 @@ public class PropertyController {
         }
     }
 
-//    delete properties by agent
+    //    delete properties by agent
     @DeleteMapping("/delete/{propertyId}")
     public ResponseEntity<PropertyDto> deleteProperty(@PathVariable Long propertyId) {
         propertyService.deleteProperty(propertyId);
         return ResponseEntity.ok(null);
     }
 
-//    get all properties
+    //    get all properties
     @GetMapping("/getAll")
     public ResponseEntity<List<PropertyDto>> getAllProperties() {
         List<PropertyDto> properties = propertyService.getAllProperties();

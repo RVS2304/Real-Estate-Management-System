@@ -100,8 +100,8 @@ const AdminDashboard = () => {
     },
     {
       title: 'Deposit Payment',
-      dataIndex: 'depositPaymentTerms',
-      key: 'depositPaymentTerms',
+      dataIndex: 'depositPayment',
+      key: 'depositPayment',
       render: (text) => `$${text}`,
     },
   ];

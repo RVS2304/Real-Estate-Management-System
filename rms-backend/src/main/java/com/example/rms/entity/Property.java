@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,7 +34,7 @@ public class Property {
     private double size;
 
     @Column(nullable = false)
-    private double price;
+    private Long price;
 
     @Column(nullable = false, length = 30)
     private String occupancyStatus;
@@ -56,7 +57,6 @@ public class Property {
 
     @Column(nullable = false)
     private boolean sold = false;
-
 
     public Property(Long propertyId) {
         this.propertyId = propertyId;

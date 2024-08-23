@@ -81,7 +81,7 @@ const PropertyDetails = () => {
         alert('Transaction initiated. The agent will contact you soon.');
       } catch (error) {
         console.error('Error initiating transaction:', error);
-        alert('There was an error processing your request. Please try again.');
+        alert(error.response.data);
       }
     }
   };
@@ -137,19 +137,9 @@ const PropertyDetails = () => {
     <div className="property-details-container">
       <h1>{property.name}</h1>
 
-      {/* Render multiple images */}
-      <div className="property-images">
-        {property.propertyImages && property.propertyImages.map((image, index) => (
-          <img 
-            key={index} 
-            src={`data:image/jpeg;base64,${image}`} 
-            alt={`${property.name} ${index + 1}`} 
-            className="property-image"
-          />
-        ))}
-      </div>
-
+      <img src={`data:image/jpeg;base64,${property.propertyImage}`} alt='image' className='property-image' />
       <p><strong>Property ID:</strong> {property.propertyId}</p>
+      <p><strong>Property Type:</strong> {property.propertyType}</p>
       <p><strong>Agent Name:</strong> {property.createdBy}</p>
       <p><strong>Address:</strong> {property.address}</p>
       <p><strong>Price:</strong> INR {property.price}</p>

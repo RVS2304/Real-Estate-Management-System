@@ -7,7 +7,7 @@ function ClientsInfo() {
   const [interestedClients, setInterestedClients] = useState([]);
   const [clients, setClients] = useState([]);
   const [transactions, setTransactions] = useState([]);
-  const [view, setView] = useState('');
+  const [view, setView] = useState('interested');
 
   const name = localStorage.getItem('username');
   const [userId, setUserId] = useState(0);
@@ -201,7 +201,7 @@ function ClientsInfo() {
       key: 'action',
       render: (text, record) => (
         record.transactionStatus === 'INITIATED' && (
-          <Button onClick={() => handleStatusUpdate(record.transactionId)}>Mark as Completed</Button>
+          <Button type='primary' className='mark-as-completed-button' onClick={() => handleStatusUpdate(record.transactionId)}>Mark as Completed</Button>
         )
       ),
     }

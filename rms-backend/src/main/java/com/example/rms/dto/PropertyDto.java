@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,7 +19,7 @@ public class PropertyDto {
     private String propertyType;
     private String address;
     private double size;
-    private double price;
+    private Long price;
     private String occupancyStatus;
     private Date closingDate;
     private Long depositPayment;

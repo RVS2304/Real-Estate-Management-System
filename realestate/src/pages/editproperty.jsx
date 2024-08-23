@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { UploadOutlined } from '@ant-design/icons';
 import '../style/addproperty.scss';
-// import moment from 'moment';
+import moment from 'moment';
 
 const { TextArea } = Input;
 
@@ -34,6 +34,13 @@ const EditPropertyForm = () => {
         const response = await axios.get(`http://localhost:8080/api/properties/${propertyId}`);
         const property = response.data;
 
+        const propertyImage = property.propertyImage ? [{
+          uid: '-1', // Unique identifier
+          name: 'image.jpg', // A unique name
+          status: 'done', // Status of the image
+          url: `data:image/jpeg;base64,${property.propertyImage}` // Convert byte array to base64 URL
+        }] : [];
+
         setInitialValues({
           propertyName: property.propertyName,
           propertyType: property.propertyType,
@@ -44,7 +51,7 @@ const EditPropertyForm = () => {
           closingDate: moment(property.closingDate), // Convert to moment object
           depositPayment: property.depositPayment,
           description: property.description,
-          propertyImage: property.propertyImage ? [property.propertyImage] : [],
+          propertyImage: propertyImage
         });
         
         form.setFieldsValue({
@@ -56,7 +63,7 @@ const EditPropertyForm = () => {
           occupancyStatus: property.occupancyStatus,
           closingDate: moment(property.closingDate),
           depositPayment: property.depositPayment,
-          description: property.description
+          description: property.description,
         });
       } catch (error) {
         console.error('Error fetching property:', error);
@@ -84,6 +91,9 @@ const EditPropertyForm = () => {
     if (values.propertyImage && values.propertyImage.length > 0) {
       const file = values.propertyImage[0].originFileObj;
       formData.append('propertyImage', file);
+    } else if (initialValues.propertyImage.length > 0) {
+      const existingImage = initialValues.propertyImage[0].url.replace('data:image/jpeg;base64,', '');
+      formData.append('propertyImage', existingImage);
     }
 
     try {
