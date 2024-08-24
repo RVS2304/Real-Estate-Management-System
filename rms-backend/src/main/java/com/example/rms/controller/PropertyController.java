@@ -79,4 +79,11 @@ public class PropertyController {
         List<PropertyDto> properties = propertyService.getAllProperties();
         return ResponseEntity.ok(properties);
     }
+
+    //    get all properties
+    @GetMapping("/getAllVacant")
+    public ResponseEntity<List<PropertyDto>> getAllVacantProperties() {
+        List<PropertyDto> properties = propertyService.getAllVacantProperties();
+        return ResponseEntity.ok(properties);
+    }
 }

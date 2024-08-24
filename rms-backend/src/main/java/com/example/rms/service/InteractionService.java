@@ -8,4 +8,5 @@ public interface InteractionService {
 
     InteractionDto saveInteraction(InteractionDto interactionDto);
     List<InteractionDto> getInteractionByUserId(Long userId);
+    void deleteInteraction(Long interactionId);
 }

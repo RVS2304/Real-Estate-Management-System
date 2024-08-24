@@ -21,15 +21,15 @@ public class Interaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long interactionId;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "client_id", nullable = false)
     private User client;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "agent_id", nullable = false)
     private User agent;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "property_id", nullable = false)
     private Property property;
 

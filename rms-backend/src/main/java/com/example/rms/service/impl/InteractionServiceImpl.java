@@ -62,4 +62,9 @@ public class InteractionServiceImpl implements InteractionService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void deleteInteraction(Long interactionId) {
+        interactionRepository.deleteById(interactionId);
+    }
+
 }

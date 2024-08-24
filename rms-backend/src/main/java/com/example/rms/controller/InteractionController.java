@@ -34,4 +34,11 @@ public class InteractionController {
 
         return ResponseEntity.ok(interactions);
     }
+
+    @DeleteMapping("/delete/{interactionId}")
+    public ResponseEntity<InteractionDto> deleteInteraction(@PathVariable Long interactionId) {
+
+        interactionService.deleteInteraction(interactionId);
+        return ResponseEntity.ok(null);
+    }
 }

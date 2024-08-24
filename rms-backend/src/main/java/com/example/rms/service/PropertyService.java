@@ -14,5 +14,6 @@ public interface PropertyService {
     PropertyDto updateProperty(Long propertyId, PropertyDto propertyDto, MultipartFile propertyImage) throws IOException;
     PropertyDto getProperty(Long propertyId);
     List<PropertyDto> getAllProperties();
+    List<PropertyDto> getAllVacantProperties();
     void deleteProperty(Long propertyId);
 }

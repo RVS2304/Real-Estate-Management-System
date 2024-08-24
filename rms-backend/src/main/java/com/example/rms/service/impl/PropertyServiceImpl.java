@@ -101,6 +101,16 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
+    public List<PropertyDto> getAllVacantProperties() {
+        List<Property> vacantProperties = propertyRepository.findBySoldFalse();
+
+        return vacantProperties.stream()
+                .map(PropertyMapper::maptoPropertyDto)
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
     public void deleteProperty(Long propertyId) {
         Property property = propertyRepository.findById(propertyId).orElseThrow(
                 () -> new RuntimeException("Property not found")
