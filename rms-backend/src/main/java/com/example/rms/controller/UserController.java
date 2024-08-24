@@ -6,7 +6,9 @@ import com.example.rms.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -54,5 +56,41 @@ public class UserController {
     public ResponseEntity<UserDto> getUserByEmail(@PathVariable("email")String email) {
         UserDto user = userService.getUserByEmail(email);
         return ResponseEntity.ok(user);
+    }
+    
+    @PostMapping("/forgot-password")
+    public Map<String, Object> forgotPassword(@RequestBody Map<String, String> payload) {
+        String email = payload.get("email");
+        boolean isSent = userService.sendPasswordResetLink(email);
+
+        Map<String, Object> response = new HashMap<>();
+        if (isSent) {
+            response.put("success", true);
+            response.put("message", "A password reset link has been sent to your email.");
+        } else {
+            response.put("success", false);
+            response.put("message", "Email not found. Please sign up or check your email.");
+        }
+
+        return response;
+    } 
+
+    
+    @PostMapping("/reset-password")
+    public Map<String, Object> resetPassword(@RequestBody Map<String, String> payload) {
+        String token = payload.get("token");
+        String password = payload.get("password");
+        boolean isReset = userService.resetPassword(token, password);
+
+        Map<String, Object> response = new HashMap<>();
+        if (isReset) {
+            response.put("success", true);
+            response.put("message", "Password has been reset successfully.");
+        } else {
+            response.put("success", false);
+            response.put("message", "Failed to reset password. Invalid token.");
+        }
+
+        return response;
     }
 }
