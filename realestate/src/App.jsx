@@ -13,18 +13,7 @@ import EditPropertyForm from './pages/agent/editproperty';
 import SetPassword from './pages/auth/SetPassword';
 import PropertyDetails from './pages/client/propertydetails';
 import Home from './pages/home/homepage';
-// import Login from './pages/login';
-// import ResetPassword from './pages/ResetPassword';
-// import Signup from './pages/Signup';
-// import AddPropertyForm from './pages/addproperty';
-// import EditPropertyForm from './pages/editproperty';
-// import Dashboard from './pages/agentdashboard';
-// import AdminDashboard from './pages/AdminDashboard.jsx';
-// import ClientsInfo from './pages/ClientsInfo.jsx';
-// import ClientDashboard from './pages/client/ClientDashboard.jsx';
-// import PropertyDetails from './pages/propertydetails.jsx';
-// import Home from './pages/homepage.jsx'; 
-// import SetPassword from './pages/SetPassword';
+
 
 const App = () => {
   return (
