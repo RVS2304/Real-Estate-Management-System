@@ -1,11 +1,9 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Button, Form, Input, InputNumber, Select, message, Upload, DatePicker } from 'antd';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { UploadOutlined } from '@ant-design/icons';
-import '../style/addproperty.scss';
-import moment from 'moment';
+import '../../style/addproperty.scss';
 
 const { TextArea } = Input;
 
@@ -22,60 +20,16 @@ const validateMessages = {
   required: '${label} is required!',
 };
 
-const EditPropertyForm = () => {
+const AddPropertyForm = () => {
   const [form] = Form.useForm();
-  const { propertyId } = useParams();
   const navigate = useNavigate();
-  const [initialValues, setInitialValues] = useState(null);
-
-  useEffect(() => {
-    const fetchProperty = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8080/api/properties/${propertyId}`);
-        const property = response.data;
-
-        const propertyImage = property.propertyImage ? [{
-          uid: '-1', // Unique identifier
-          name: 'image.jpg', // A unique name
-          status: 'done', // Status of the image
-          url: `data:image/jpeg;base64,${property.propertyImage}` // Convert byte array to base64 URL
-        }] : [];
-
-        setInitialValues({
-          propertyName: property.propertyName,
-          propertyType: property.propertyType,
-          address: property.address,
-          size: property.size,
-          price: property.price,
-          occupancyStatus: property.occupancyStatus,
-          closingDate: moment(property.closingDate), // Convert to moment object
-          depositPayment: property.depositPayment,
-          description: property.description,
-          propertyImage: propertyImage
-        });
-        
-        form.setFieldsValue({
-          propertyName: property.propertyName,
-          propertyType: property.propertyType,
-          address: property.address,
-          size: property.size,
-          price: property.price,
-          occupancyStatus: property.occupancyStatus,
-          closingDate: moment(property.closingDate),
-          depositPayment: property.depositPayment,
-          description: property.description,
-        });
-      } catch (error) {
-        console.error('Error fetching property:', error);
-        message.error('Failed to fetch property details.');
-      }
-    };
-
-    fetchProperty();
-  }, [form, propertyId]);
 
   const onFinish = async (values) => {
     const formData = new FormData();
+
+    const username = localStorage.getItem('username');
+
+    
     formData.append('property', JSON.stringify({
       propertyName: values.propertyName,
       propertyType: values.propertyType,
@@ -83,30 +37,35 @@ const EditPropertyForm = () => {
       size: values.size,
       price: values.price,
       occupancyStatus: values.occupancyStatus,
-      closingDate: values.closingDate.format('YYYY-MM-DD'),
+      closingDate: values.closingDate.format('YYYY-MM-DD'), 
       depositPayment: values.depositPayment,
       description: values.description,
     }));
-
+    
+    // Handle image upload
     if (values.propertyImage && values.propertyImage.length > 0) {
       const file = values.propertyImage[0].originFileObj;
       formData.append('propertyImage', file);
-    } else if (initialValues.propertyImage.length > 0) {
-      const existingImage = initialValues.propertyImage[0].url.replace('data:image/jpeg;base64,', '');
-      formData.append('propertyImage', existingImage);
+    } else {
+      console.log('No image selected.');
     }
 
+    formData.append('username', username);
+
     try {
-      await axios.put(`http://localhost:8080/api/properties/edit/${propertyId}`, formData, {
+      await axios.post('http://localhost:8080/api/properties/add', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      message.success('Property updated successfully!');
+      message.success('Property added successfully!');
+
+      form.resetFields();
+
       navigate('/agent-dashboard');
     } catch (error) {
-      console.error('Error updating property:', error);
-      message.error('Failed to update property.');
+      console.error('Error adding property:', error);
+      message.error('Failed to add property!');
     }
   };
 
@@ -119,13 +78,12 @@ const EditPropertyForm = () => {
       <Form
         {...layout}
         form={form}
-        name="edit-property-form"
+        name="property-form"
         onFinish={onFinish}
         validateMessages={validateMessages}
         className='form-wid'
-        initialValues={initialValues}
       >
-        <h2 className='title'>Edit Property</h2>
+        <h2 className='title'>Add Property</h2>
 
         <Form.Item
           name="propertyName"
@@ -161,7 +119,7 @@ const EditPropertyForm = () => {
 
         <Form.Item
           name="size"
-          label="Size (in sq.ft)"
+          label="size (in sq.ft)"
           rules={[{ required: true, message: 'Please input the size!' }]}
         >
           <InputNumber min={0} placeholder="Enter size" />
@@ -213,13 +171,18 @@ const EditPropertyForm = () => {
         <Form.Item
           name="propertyImage"
           label="Property Image"
-          rules={[{ required: true, message: 'Please upload atleast one image!' }]}
+          rules={[{ required: true, message: 'Please select atleast one image!' }]}
           valuePropName="fileList"
           getValueFromEvent={(e) => {
             return Array.isArray(e) ? e : e?.fileList;
           }}
         >
-          <Upload name="propertyImage" listType="picture" beforeUpload={() => false}>
+          <Upload 
+            name="propertyImages" 
+            listType="picture" 
+            multiple 
+            beforeUpload={() => false}
+          >
             <Button icon={<UploadOutlined />}>Click to Upload</Button>
           </Upload>
         </Form.Item>
@@ -242,4 +205,4 @@ const EditPropertyForm = () => {
   );
 };
 
-export default EditPropertyForm;
+export default AddPropertyForm;

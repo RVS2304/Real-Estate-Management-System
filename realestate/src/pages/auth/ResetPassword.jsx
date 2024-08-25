@@ -5,18 +5,7 @@ import { useNavigate } from 'react-router-dom';
 function ResetPassword() {
     const [email, setEmail] = useState('');
     const navigate = useNavigate();
-    // const handleSubmit = async (event) => {
-    //     event.preventDefault();
-    //     try {
-    //         const response = await axios.post('http://localhost:8080/api/users/forgot-password', { email });
-    //         if (response.status === 200) {
-    //             alert('Reset link sent successfully');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error sending reset link:', error);
-    //         alert('Failed to send reset link');
-    //     }
-    // };
+   
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {

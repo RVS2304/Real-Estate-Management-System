@@ -4,21 +4,21 @@
   background-color: #f9f9f9;
   border-radius: 8px;
   max-width: 800px;
-  width: 100%; /* Ensure it takes full width up to max-width */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.507); /* Optional: Shadow effect for better visibility */
-  margin: auto; /* Centers the container horizontally */
-  margin-top: 10%;
+  width: 100%; 
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.507); 
+  margin: 5rem auto 5rem;
 }
 
 .property-images {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px; /* Adjust spacing between images */
+  gap: 10px;
 }
 
 
 .property-image {
-  width: 200px; /* Adjust size as needed */
+  width: 500px;
+  align-items: center;
   height: auto;
   object-fit: cover;
   border: 1px solid #ddd;
@@ -26,7 +26,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Styling for the property image */
 .property-image {
   width: 100%;
   height: 100px; /* Maintain aspect ratio */

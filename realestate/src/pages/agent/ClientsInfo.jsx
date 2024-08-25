@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table, Button } from 'antd';
-import '../style/dashboard.css';
+import '../../style/dashboard.css';
 
 function ClientsInfo() {
   const [interestedClients, setInterestedClients] = useState([]);
@@ -52,6 +52,7 @@ function ClientsInfo() {
             return {
               ...response.data,
               propertyId: client.propertyId,
+              interactionId: client.interactionId,
               interactionType: client.interactionType,
               interactionText: client.interactionText
             };
@@ -95,6 +96,8 @@ function ClientsInfo() {
     fetchTransactions();
   }, [userId]);
 
+
+
   // Function to handle status update
   const handleStatusUpdate = async (transactionId) => {
     try {
@@ -122,12 +125,37 @@ function ClientsInfo() {
     }
   };
 
+
+
+  const handleInteractionUpdate = async (interactionId) => {
+    try {
+        await axios.delete(`http://localhost:8080/api/interactions/delete/${interactionId}`);
+        
+        const updatedInterestedClients = interestedClients.filter(client => client.interactionId !== interactionId);
+        setInterestedClients(updatedInterestedClients);
+
+        const updatedClients = clients.filter(client => client.interactionId !== interactionId);
+        setClients(updatedClients);
+
+        alert('Interaction completed and deleted successfully.');
+    } catch (error) {
+        console.error('Error updating interaction status:', error);
+        alert('Error updating interaction status. Please try again.');
+    }
+};
+
+
   const handleViewChange = (view) => {
     setView(view);
   };
 
   // Define columns for the clients and buyers tables
   const interestedClientColumns = [
+    {
+      title: 'Interaction Id',
+      dataIndex: 'interactionId',
+      key: 'interactionId'
+    },
     {
       title: 'Property Id',
       dataIndex: 'propertyId',
@@ -157,6 +185,13 @@ function ClientsInfo() {
       title: 'Interaction Text',
       dataIndex: 'interactionText',
       key: 'interactionText'
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (text, record) => (
+        <Button type='primary' className='mark-as-completed-button' onClick={() => handleInteractionUpdate(record.interactionId)}>Complete and Delete Interaction</Button>
+      ),
     }
   ];
 

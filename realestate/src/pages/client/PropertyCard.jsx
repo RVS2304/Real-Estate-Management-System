@@ -1,6 +1,6 @@
 import React from 'react';
-import '../style/propertyCard.css';
-import { capitalizeWords } from '../utils';
+import '../../style/propertyCard.css';
+import { capitalizeWords } from '../../utils';
 import { useNavigate } from 'react-router-dom';
 
 const PropertyCard = ({ property }) => {

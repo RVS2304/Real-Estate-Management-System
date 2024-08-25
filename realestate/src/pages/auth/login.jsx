@@ -3,7 +3,7 @@ import React from 'react';
 import { Button, Form, Input, message, Radio } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../../src/style/login.scss';
+import '../../style/login.scss';
 
 const LoginForm = () => {
   const navigate = useNavigate();

@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { DeleteOutlined, EditOutlined, EyeOutlined, LogoutOutlined, PlusOutlined } from '@ant-design/icons';
 
-const Dashboard = () => {
+const AgentDashboard = () => {
   const [properties, setProperties] = useState([]);
-  const [deleted, setDeleted] = useState(false); // State to track deletion
+  const [deleted, setDeleted] = useState(false); 
   const navigate = useNavigate();
-  const username = localStorage.getItem('username'); // Retrieving username from localStorage
+  const username = localStorage.getItem('username');
 
   const headerStyle = {
     backgroundColor: '#f0f2f5',
@@ -100,6 +100,7 @@ const Dashboard = () => {
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
+      render: (text) => `INR ${text}`,
     },
     {
       title: 'Occupancy Status',
@@ -118,6 +119,7 @@ const Dashboard = () => {
       title: 'Deposit Payment',
       dataIndex: 'depositPayment',
       key: 'deposit_payment',
+      render: (text) => `INR ${text}`,
     },
     {
       title: 'Description',
@@ -183,4 +185,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default AgentDashboard;

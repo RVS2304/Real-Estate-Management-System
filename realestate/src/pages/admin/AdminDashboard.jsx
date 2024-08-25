@@ -1,13 +1,24 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Table, Button, message } from 'antd';
-import '../style/admindashboardstyles.css';
+import { LogoutOutlined } from '@ant-design/icons';
+import '../../style/admindashboardstyles.css';
 
 const AdminDashboard = () => {
-  const [view, setView] = useState('');
+  const [view, setView] = useState('agents'); 
   const [users, setUsers] = useState([]);
   const [properties, setProperties] = useState([]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchUsersByRole('AGENT');
+  }, []);
+
+  const handleLogout = () => {
+    navigate(`/login`);
+  };
 
   const handleViewChange = (viewName) => {
     setView(viewName);
@@ -91,7 +102,7 @@ const AdminDashboard = () => {
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
-      render: (text) => `$${text}`,
+      render: (text) => `INR ${text}`,
     },
     {
       title: 'Occupancy Status',
@@ -102,7 +113,7 @@ const AdminDashboard = () => {
       title: 'Deposit Payment',
       dataIndex: 'depositPayment',
       key: 'depositPayment',
-      render: (text) => `$${text}`,
+      render: (text) => `INR ${text}`,
     },
   ];
 
@@ -110,6 +121,14 @@ const AdminDashboard = () => {
     <div className="admin-dashboard">
       <nav className="menu-bar">
         <h1 className="dashboard-title">Admin Dashboard</h1>
+        <Button
+          danger
+          icon={<LogoutOutlined />}
+          onClick={handleLogout}
+          className='logout-button'
+        >
+          Logout
+        </Button>
         <ul>
           <li><Button type="link" onClick={() => handleViewChange('agents')}>View Agents</Button></li>
           <li><Button type="link" onClick={() => handleViewChange('clients')}>View Clients</Button></li>
